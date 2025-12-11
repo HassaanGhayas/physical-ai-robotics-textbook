@@ -14,6 +14,8 @@
   --ifm-color-primary-lightest: #93c5fd;
   --ifm-code-font-size: 90%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --prism-background-color: #f6f8fa;
+  --prism-color: #24292f;
 
   /* Additional colors for technical content */
   --ifm-color-hardware: #dc2626; /* Red for hardware components */
@@ -61,6 +63,8 @@
   --ifm-border-color: #444444;
   --ifm-code-background: #2d2d2d;
   --ifm-code-color: #f8f8f2;
+  --prism-background-color: #2d2d2d;
+  --prism-color: #f8f8f2;
   --book-primary: #5a7dff;
   --book-primary-dark: #4a6cf7;
   --book-primary-light: #6a8dff;
@@ -76,6 +80,8 @@
   --ifm-border-color: #e2e8f0;
   --ifm-code-background: #f6f8fa;
   --ifm-code-color: #24292f;
+  --prism-background-color: #f6f8fa;
+  --prism-color: #24292f;
 }
 
 /* Auto theme - defaults to system preference */
@@ -86,6 +92,8 @@
   --ifm-border-color: #e2e8f0;
   --ifm-code-background: #f6f8fa;
   --ifm-code-color: #24292f;
+  --prism-background-color: #f6f8fa;
+  --prism-color: #24292f;
 }
 
 /* Media query for dark mode preference */
@@ -97,6 +105,8 @@
     --ifm-border-color: #444444;
     --ifm-code-background: #2d2d2d;
     --ifm-code-color: #f8f8f2;
+    --prism-background-color: #2d2d2d;
+    --prism-color: #f8f8f2;
   }
 }
 
@@ -206,6 +216,27 @@
 /* Code tabs enhancements */
 .tabs-container {
   margin: var(--ifm-spacing-vertical) 0;
+}
+
+/* Inline code styling for better visibility */
+code {
+  background-color: var(--ifm-code-background);
+  color: var(--ifm-code-color);
+  padding: 2px 6px;
+  border-radius: var(--ifm-global-radius);
+  font-size: 0.875rem;
+  font-family: var(--ifm-font-family-monospace);
+}
+
+:not([data-theme]) code,
+[data-theme='light'] code {
+  background-color: #f6f8fa;
+  color: #24292f;
+}
+
+[data-theme='dark'] code {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
 }
 
 /* Custom styling for book-specific elements */

@@ -35,7 +35,6 @@ const sidebars: SidebarsConfig = {
         'book/hardware-requirements/edge-kit',
         'book/hardware-requirements/robot-lab-options',
         'book/hardware-requirements/cloud-alternatives',
-        'book/sample-components',
       ],
     },
     {

@@ -43,6 +43,7 @@
   overflow: auto;
   max-height: 400px;
   background-color: var(--prism-background-color);
+  color: var(--prism-color);
   font-size: var(--ifm-code-font-size);
   line-height: 1.5;
 }
