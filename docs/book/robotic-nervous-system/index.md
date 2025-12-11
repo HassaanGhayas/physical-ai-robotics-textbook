@@ -1,0 +1,216 @@
+---
+title: The Robotic Nervous System (ROS 2)
+sidebar_position: 1
+description: Middleware for robot control using ROS 2
+---
+
+import HardwareSpecs from '@site/src/components/HardwareSpecs/HardwareSpecs';
+import CodeExamples from '@site/src/components/CodeExamples/CodeExamples';
+import TechnicalDiagrams from '@site/src/components/TechnicalDiagrams/TechnicalDiagrams';
+
+# The Robotic Nervous System (ROS 2)
+
+Focus: Middleware for robot control.
+
+## Overview
+
+ROS 2 (Robot Operating System 2) serves as the "nervous system" of robotic platforms. It provides the communication framework that allows different components of a robot to work together seamlessly. This module covers the essential concepts and implementation of ROS 2 for controlling humanoid robots.
+
+## Key Components
+
+### ROS 2 Nodes, Topics, and Services
+
+The fundamental building blocks of ROS 2 communication:
+
+- **Nodes**: Individual processes that perform computation
+- **Topics**: Unidirectional data streams for publishing/subscribing
+- **Services**: Bidirectional request/response communication
+
+### Bridging Python Agents to ROS Controllers using rclpy
+
+Connecting AI agents to robot control systems through ROS 2's Python client library.
+
+### Understanding URDF (Unified Robot Description Format) for Humanoids
+
+URDF is crucial for describing robot geometry, kinematics, and dynamics, especially for complex humanoid robots.
+
+## Module Objectives
+
+By the end of this module, you will:
+
+- Understand the architecture and communication patterns of ROS 2
+- Implement nodes that can communicate via topics and services
+- Create bridges between Python-based AI agents and ROS controllers
+- Design and work with URDF files for humanoid robots
+- Develop basic control systems for robot actuators
+
+## Prerequisites
+
+- Basic Python programming skills
+- Understanding of object-oriented programming concepts
+- Fundamental knowledge of robotics concepts (optional but helpful)
+
+## Learning Path
+
+This module builds the foundation for all subsequent modules, as ROS 2 serves as the backbone for communication between perception, planning, and actuation systems in our humanoid robotics applications.
+
+## Hardware Requirements for ROS 2 Systems
+
+<HardwareSpecs
+  name="ROS 2 Development Platform"
+  category="Robotics Middleware"
+  specs={{
+    cpu: "4+ core processor (Intel i5 or AMD Ryzen 5+)",
+    memory: "8GB+ RAM (16GB recommended)",
+    storage: "50GB+ available space",
+    network: "Gigabit Ethernet, WiFi 802.11n+",
+    os: "Ubuntu 22.04 LTS, Windows 10/11, macOS 12+"
+  }}
+  cost={{
+    price: "Varies (existing hardware often sufficient)",
+    reasoning: "ROS 2 can run on standard development machines but benefits from more powerful hardware for simulation"
+  }}
+  pros={[
+    "Can run on existing development machines",
+    "Lightweight for basic operations",
+    "Cross-platform compatibility",
+    "Large community and package ecosystem"
+  ]}
+  cons={[
+    "Performance limited by hardware for complex simulations",
+    "Real-time performance requires special configurations",
+    "Network setup can be complex in multi-robot systems"
+  ]}
+/>
+
+## Sample ROS 2 Implementation
+
+<CodeExamples
+  title="ROS 2 Action Client for Humanoid Robot"
+  description="Implementation of a ROS 2 action client for controlling humanoid robot movements"
+  language="python"
+  code={`import rclpy
+from rclpy.action import ActionClient
+from rclpy.node import Node
+from control_msgs.action import FollowJointTrajectory
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from builtin_interfaces.msg import Duration
+import time
+
+class HumanoidController(Node):
+    def __init__(self):
+        super().__init__('humanoid_controller')
+
+        # Create action client for trajectory execution
+        self._action_client = ActionClient(
+            self,
+            FollowJointTrajectory,
+            'joint_trajectory_controller/follow_joint_trajectory'
+        )
+
+        # Define joint names for humanoid robot
+        self.joint_names = [
+            'left_hip_joint', 'left_knee_joint', 'left_ankle_joint',
+            'right_hip_joint', 'right_knee_joint', 'right_ankle_joint',
+            'left_shoulder_joint', 'left_elbow_joint',
+            'right_shoulder_joint', 'right_elbow_joint',
+            'head_pan_joint', 'head_tilt_joint'
+        ]
+
+        self.get_logger().info('Humanoid Controller initialized')
+
+    def send_trajectory_goal(self, positions, durations):
+        """Send a trajectory goal to the robot"""
+        # Wait for action server
+        self._action_client.wait_for_server()
+
+        # Create goal message
+        goal_msg = FollowJointTrajectory.Goal()
+        goal_msg.trajectory = JointTrajectory()
+        goal_msg.trajectory.joint_names = self.joint_names
+
+        # Add trajectory points
+        for i, pos in enumerate(positions):
+            point = JointTrajectoryPoint()
+            point.positions = pos
+            point.time_from_start = Duration(sec=durations[i])
+            goal_msg.trajectory.points.append(point)
+
+        # Send goal
+        self._send_goal_future = self._action_client.send_goal_async(
+            goal_msg,
+            feedback_callback=self.feedback_callback
+        )
+
+        self._send_goal_future.add_done_callback(self.goal_response_callback)
+
+    def goal_response_callback(self, future):
+        """Handle goal response"""
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.get_logger().info('Goal rejected')
+            return
+
+        self.get_logger().info('Goal accepted')
+        self._get_result_future = goal_handle.get_result_async()
+        self._get_result_future.add_done_callback(self.get_result_callback)
+
+    def get_result_callback(self, future):
+        """Handle result of trajectory execution"""
+        result = future.result().result
+        self.get_logger().info(f'Result: {result}')
+
+    def feedback_callback(self, feedback_msg):
+        """Handle feedback during trajectory execution"""
+        feedback = feedback_msg.feedback
+        self.get_logger().info(f'Feedback: {feedback}')
+
+    def create_walk_trajectory(self):
+        """Create a simple walking trajectory"""
+        # Define key poses for walking gait
+        stance_poses = [
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],  # Initial stance
+            [0.1, -0.2, 0.1, -0.1, 0.2, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],  # Step forward left
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],  # Return to stance
+        ]
+
+        # Define timing for each pose (in seconds)
+        durations = [1, 2, 3]  # 1s to first pose, 2s to second, 3s to return
+
+        return stance_poses, durations
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    controller = HumanoidController()
+
+    # Create and send a walking trajectory
+    positions, durations = controller.create_walk_trajectory()
+    controller.send_trajectory_goal(positions, durations)
+
+    try:
+        rclpy.spin(controller)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        controller.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()`}
+  copyable={true}
+  expandable={true}
+  maxHeight="400px"
+/>
+
+## ROS 2 Architecture Diagram
+
+<TechnicalDiagrams
+  title="ROS 2 Middleware Architecture"
+  description="Architecture diagram showing the communication between different ROS 2 nodes in a humanoid robot system"
+  imageUrl="/img/ros2-architecture.png"
+  caption="ROS 2 architecture showing nodes, topics, services, and actions in a humanoid robot control system"
+  altText="ROS 2 architecture diagram for humanoid robot"
+  interactive={true}
+  zoomable={true}
+/>

@@ -1,0 +1,101 @@
+# Dependencies
+/node_modules
+
+# Production
+/build
+
+# Generated files
+.docusaurus
+.cache-loader
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.nyc_output
+coverage
+.nyc_output/
+.coverage/
+.nyc_output/**
+.coverage/**
+*.log
+
+# Docusaurus
+.docusaurus/
+.cache-loader/
+.temp/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Local development
+.env
+.env.backup
+*.local
+
+# Sensitive configuration files
+config/
+configs/
+*.config.js
+*.config.json
+.env*
+!.env.example
+secrets/
+credentials.json
+*.key
+*.pem
+*.cer
+*.crt
+*.cert
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# IDE and editor files
+.vs/
+*.swp
+*.swo
+*~
+/.viminfo
+.idea/
+*.tmproj
+*.sublime-project
+*.sublime-workspace
+.vscode/
+.vscode-test/
+
+# Authentication and tokens
+*token*
+*auth*
+*secret*
+*password*
+*.token
+*.password
+*.secret
+*.env.local
+*.env.*.local

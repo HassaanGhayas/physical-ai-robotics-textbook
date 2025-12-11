@@ -1,0 +1,344 @@
+/**
+ * Custom CSS for Physical AI & Humanoid Robotics Book
+ * Technical documentation theme optimized for robotics and AI content
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #2563eb; /* Indigo blue for tech theme */
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
+  --ifm-code-font-size: 90%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Additional colors for technical content */
+  --ifm-color-hardware: #dc2626; /* Red for hardware components */
+  --ifm-color-software: #059669; /* Green for software/code */
+  --ifm-color-ai: #7c3aed; /* Purple for AI content */
+  --ifm-color-robotics: #ea580c; /* Orange for robotics */
+
+  /* Enhanced typography for technical content */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --ifm-line-height-base: 1.7;
+
+  /* Custom variables for Physical AI & Humanoid Robotics book */
+  --book-primary: #4a6cf7;
+  --book-primary-dark: #3a5ae8;
+  --book-primary-light: #5a7dff;
+  --book-accent: #ff6b6b;
+  --book-accent-dark: #e55a5a;
+  --book-accent-light: #ff7c7c;
+  --book-neutral: #6c757d;
+  --book-neutral-light: #f8f9fa;
+  --book-neutral-dark: #343a40;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #3b82f6;
+  --ifm-color-primary-dark: #2563eb;
+  --ifm-color-primary-darker: #1d4ed8;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #60a5fa;
+  --ifm-color-primary-lighter: #93c5fd;
+  --ifm-color-primary-lightest: #dbeafe;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  /* Dark mode specific colors */
+  --ifm-color-hardware: #f87171; /* Lighter red for dark mode */
+  --ifm-color-software: #34d399; /* Lighter green for dark mode */
+  --ifm-color-ai: #a78bfa; /* Lighter purple for dark mode */
+  --ifm-color-robotics: #fdba74; /* Lighter orange for dark mode */
+
+  /* Dark theme specific variables for the book */
+  --ifm-background-color: #1a1a1a;
+  --ifm-background-surface-color: #222222;
+  --ifm-font-color-base: #e0e0e0;
+  --ifm-border-color: #444444;
+  --ifm-code-background: #2d2d2d;
+  --ifm-code-color: #f8f8f2;
+  --book-primary: #5a7dff;
+  --book-primary-dark: #4a6cf7;
+  --book-primary-light: #6a8dff;
+  --book-neutral-light: #2d2d2d;
+  --book-neutral-dark: #e0e0e0;
+}
+
+/* Light theme overrides */
+[data-theme='light'] {
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8f9fa;
+  --ifm-font-color-base: #2d3748;
+  --ifm-border-color: #e2e8f0;
+  --ifm-code-background: #f6f8fa;
+  --ifm-code-color: #24292f;
+}
+
+/* Auto theme - defaults to system preference */
+:not([data-theme]) {
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8f9fa;
+  --ifm-font-color-base: #2d3748;
+  --ifm-border-color: #e2e8f0;
+  --ifm-code-background: #f6f8fa;
+  --ifm-code-color: #24292f;
+}
+
+/* Media query for dark mode preference */
+@media (prefers-color-scheme: dark) {
+  :not([data-theme='light']) {
+    --ifm-background-color: #1a1a1a;
+    --ifm-background-surface-color: #222222;
+    --ifm-font-color-base: #e0e0e0;
+    --ifm-border-color: #444444;
+    --ifm-code-background: #2d2d2d;
+    --ifm-code-color: #f8f8f2;
+  }
+}
+
+/* Enhanced styling for technical documentation */
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Hardware specification tables */
+.hardware-spec-table th {
+  background-color: rgba(var(--ifm-color-hardware-rgb), 0.1);
+}
+
+/* Code block enhancements */
+.code-block {
+  border-left: 3px solid var(--ifm-color-primary);
+  margin-bottom: var(--ifm-spacing-vertical);
+  margin-top: var(--ifm-spacing-vertical);
+}
+
+/* Mathematical equations styling */
+.math-equation {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: var(--ifm-background-surface-color);
+  border-radius: var(--ifm-global-radius);
+  overflow-x: auto;
+}
+
+/* Technical diagram containers */
+.tech-diagram {
+  margin: 2rem 0;
+  text-align: center;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  padding: 1rem;
+  background-color: var(--ifm-menu-color-background-active);
+}
+
+/* Enhanced readability for technical content */
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  font-weight: 600;
+  margin-top: 2rem;
+}
+
+.markdown p {
+  line-height: var(--ifm-line-height-base);
+  margin-bottom: 1rem;
+}
+
+/* Sidebar enhancements for technical content */
+.menu__list-item--collapsed {
+  opacity: 0.8;
+}
+
+/* Footer enhancements */
+.footer--dark {
+  --ifm-footer-background-color: #1e293b;
+}
+
+/* Custom admonitions for technical warnings */
+.alert--warning {
+  border-left-color: var(--ifm-color-robotics);
+}
+
+.alert--info {
+  border-left-color: var(--ifm-color-ai);
+}
+
+.alert--success {
+  border-left-color: var(--ifm-color-software);
+}
+
+.alert--danger {
+  border-left-color: var(--ifm-color-hardware);
+}
+
+/* Table enhancements for hardware specs */
+.markdown table {
+  display: table;
+}
+
+.markdown table th,
+.markdown table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.markdown table th {
+  background-color: var(--ifm-color-emphasis-100);
+  font-weight: 600;
+}
+
+/* Code tabs enhancements */
+.tabs-container {
+  margin: var(--ifm-spacing-vertical) 0;
+}
+
+/* Custom styling for book-specific elements */
+.book-header {
+  background: linear-gradient(135deg, var(--book-primary), var(--book-primary-dark));
+  color: white;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.book-intro {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: var(--ifm-font-color-base);
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+.book-section {
+  margin: 3rem 0;
+  padding: 2rem 0;
+}
+
+.book-section-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--book-primary);
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.book-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--book-accent);
+  border-radius: 2px;
+}
+
+/* Custom card styling */
+.book-card {
+  background: var(--ifm-background-surface-color);
+  border-radius: var(--ifm-global-radius);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  transition: all var(--ifm-transition-medium) ease;
+}
+
+.book-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Custom button styling */
+.book-button {
+  display: inline-block;
+  background: var(--book-primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--ifm-global-radius);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all var(--ifm-transition-fast) ease;
+  border: none;
+  cursor: pointer;
+}
+
+.book-button:hover {
+  background: var(--book-primary-dark);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book-button.book-button-secondary {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-font-color-base);
+}
+
+.book-button.book-button-secondary:hover {
+  background: var(--ifm-color-emphasis-300);
+}
+
+/* Custom alert styling for book */
+.book-alert {
+  border-left: 4px solid var(--book-accent);
+  background-color: var(--ifm-color-emphasis-100);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 var(--ifm-global-radius) var(--ifm-global-radius) 0;
+}
+
+.book-alert.book-alert-important {
+  border-left-color: var(--ifm-color-warning);
+}
+
+.book-alert.book-alert-tip {
+  border-left-color: var(--ifm-color-success);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .book-header {
+    padding: 1.5rem 0;
+  }
+
+  .book-intro {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .book-section {
+    padding: 1.5rem 0;
+    margin: 2rem 0;
+  }
+
+  .book-section-title {
+    font-size: 1.5rem;
+  }
+
+  .book-card {
+    padding: 1rem;
+  }
+
+  .book-button {
+    display: block;
+    text-align: center;
+    margin: 0.5rem 0;
+  }
+}

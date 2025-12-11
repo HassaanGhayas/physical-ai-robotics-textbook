@@ -1,0 +1,94 @@
+.container {
+  margin: 2rem 0;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  overflow: hidden;
+  background-color: var(--ifm-background-surface-color);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: var(--ifm-color-emphasis-100);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: var(--ifm-heading-font-weight);
+}
+
+.descriptionContainer {
+  padding: 1rem;
+  background-color: var(--ifm-color-emphasis-0);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.descriptionContainer p {
+  margin: 0;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.codeContainer {
+  position: relative;
+}
+
+.codeBlock {
+  margin: 0;
+  padding: 1rem !important;
+  border-radius: 0;
+  overflow: auto;
+  max-height: 400px;
+  background-color: var(--prism-background-color);
+  font-size: var(--ifm-code-font-size);
+  line-height: 1.5;
+}
+
+.copyButton {
+  background-color: var(--ifm-color-emphasis-200);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all var(--ifm-transition-fast) ease;
+}
+
+.copyButton:hover {
+  background-color: var(--ifm-color-emphasis-300);
+}
+
+.copyButton.copied {
+  background-color: var(--ifm-color-success);
+  color: white;
+}
+
+.expandButton {
+  width: 100%;
+  background-color: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-top: none;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color var(--ifm-transition-fast) ease;
+}
+
+.expandButton:hover {
+  background-color: var(--ifm-color-emphasis-200);
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .copyButton {
+    align-self: flex-end;
+  }
+}

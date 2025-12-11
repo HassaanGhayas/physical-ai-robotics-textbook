@@ -1,0 +1,111 @@
+.container {
+  margin: 2rem 0;
+  padding: 0 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  overflow: hidden;
+}
+
+.zoomable {
+  cursor: pointer;
+}
+
+.diagramHeader {
+  background-color: var(--ifm-color-emphasis-100);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.diagramHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: var(--ifm-heading-font-weight);
+}
+
+.diagramContent {
+  padding: 1rem;
+}
+
+.imageContainer {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+
+.diagramImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--ifm-global-radius);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: transform var(--ifm-transition-fast) ease;
+}
+
+.zoomedImage {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90vw;
+  max-height: 90vh;
+  z-index: 1000;
+  cursor: zoom-out;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.overlayControls {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.zoomButton {
+  background-color: var(--ifm-color-emphasis-800);
+  color: white;
+  border: none;
+  border-radius: var(--ifm-global-radius);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity var(--ifm-transition-fast) ease;
+}
+
+.zoomButton:hover {
+  opacity: 1;
+}
+
+.captionContainer {
+  margin-top: 1rem;
+}
+
+.description {
+  margin: 0 0 0.5rem 0;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.caption {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+
+  .imageContainer {
+    display: block;
+  }
+
+  .overlayControls {
+    position: static;
+    margin-top: 0.5rem;
+    justify-content: center;
+  }
+}

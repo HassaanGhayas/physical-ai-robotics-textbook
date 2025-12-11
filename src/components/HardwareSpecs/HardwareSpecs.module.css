@@ -1,0 +1,141 @@
+.container {
+  margin: 2rem 0;
+  padding: 0 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: var(--ifm-color-emphasis-100);
+  border-radius: var(--ifm-global-radius);
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: box-shadow var(--ifm-transition-fast) ease,
+    transform var(--ifm-transition-fast) ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: var(--ifm-heading-font-weight);
+}
+
+.category {
+  background-color: var(--ifm-color-primary-lightest);
+  color: var(--ifm-color-primary-darker);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.specRow {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.specCol {
+  flex: 1;
+}
+
+.specCol h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+}
+
+.costRow {
+  margin-bottom: 1rem;
+}
+
+.costRow h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+}
+
+.reasoningRow {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: var(--ifm-color-emphasis-0);
+  border-radius: var(--ifm-global-radius);
+}
+
+.reasoningRow h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+}
+
+.proConRow {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.proConCol {
+  flex: 1;
+}
+
+.proConCol h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+}
+
+.proConCol ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.proConCol li {
+  margin-bottom: 0.25rem;
+}
+
+.proConCol:first-child li::marker {
+  color: var(--ifm-color-success);
+}
+
+.proConCol:last-child li::marker {
+  color: var(--ifm-color-danger);
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .specRow {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .proConRow {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,8 @@
+node_modules/
+build/
+.docusaurus/
+.cache-loader/
+*.min.js
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
