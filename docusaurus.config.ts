@@ -15,15 +15,15 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://HassaanGhayas.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/physical-ai-robotics-textbook/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'your-org-name', // Usually your GitHub org/user name.
-  projectName: 'physical-ai-book', // Usually your repo name.
+  organizationName: 'HassaanGhayas', // Usually your GitHub org/user name.
+  projectName: 'physical-ai-robotics-textbook', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   markdown: {
@@ -98,7 +98,7 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/your-org/physical-ai-book',
+          href: 'https://github.com/HassaanGhayas/physical-ai-robotics-textbook',
           label: 'GitHub',
           position: 'right',
         },
@@ -145,7 +145,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/your-org/physical-ai-book',
+              href: 'https://github.com/HassaanGhayas/physical-ai-robotics-textbook',
             },
             {
               label: 'Discord',
