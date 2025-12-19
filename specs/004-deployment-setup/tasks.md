@@ -188,10 +188,10 @@ Each phase is independently testable and deployable, allowing for continuous val
 ### Tasks
 
 #### Backend Preparation
-- [ ] T030 [P] [US4] Create D:\my-web\backend\app.py as HF Spaces entrypoint (wrapper that imports and runs api.py)
-- [ ] T031 [P] [US4] Generate D:\my-web\backend\requirements.txt from pyproject.toml: `poetry export -f requirements.txt --output requirements.txt --without-hashes`
-- [ ] T032 [P] [US4] Add /health endpoint to D:\my-web\backend\api.py that returns {"status": "healthy", "timestamp": "..."}
-- [ ] T033 [US4] Update CORS configuration in D:\my-web\backend\api.py to allow origin: `https://hassaanghayas.github.io`
+- [X] T030 [P] [US4] Create D:\my-web\backend\app.py as HF Spaces entrypoint (wrapper that imports and runs api.py)
+- [X] T031 [P] [US4] Generate D:\my-web\backend\requirements.txt from pyproject.toml: `poetry export -f requirements.txt --output requirements.txt --without-hashes`
+- [X] T032 [P] [US4] Add /health endpoint to D:\my-web\backend\api.py that returns {"status": "healthy", "timestamp": "..."}
+- [X] T033 [US4] Update CORS configuration in D:\my-web\backend\api.py to allow origin: `https://hassaanghayas.github.io`
 
 #### Hugging Face Spaces Setup
 - [ ] T034 [US4] Create Hugging Face Space: Go to huggingface.co/new-space, name: "physical-ai-robotics-backend", SDK: Docker, Visibility: Public
@@ -201,7 +201,7 @@ Each phase is independently testable and deployable, allowing for continuous val
   - QDRANT_API_KEY = [your_key]
   - QDRANT_URL = [your_cluster_url]
   - NEON_DATABASE_URL = [your_db_url] (if used)
-- [ ] T037 [US4] Update D:\my-web\backend\README.md with HF deployment instructions and Space URL
+- [X] T037 [US4] Update D:\my-web\backend\README.md with HF deployment instructions and Space URL
 
 #### Testing & Validation
 - [ ] T038 [US4] Test backend deployment: Push to 001-book-creation, wait for HF build (5-10 min), verify Space shows "Running" status

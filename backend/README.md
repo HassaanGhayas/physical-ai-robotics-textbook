@@ -149,6 +149,68 @@ Visit `http://localhost:8000/docs` for interactive Swagger/OpenAPI documentation
 - Reduce `top_k` if retrieval is slow
 - Monitor individual timing metrics in response metadata
 
+## Deployment to Hugging Face Spaces
+
+### Prerequisites
+- Hugging Face account
+- Repository secrets configured (COHERE_API_KEY, QDRANT_API_KEY, QDRANT_URL)
+
+### Deployment Steps
+
+1. **Create Hugging Face Space**:
+   - Go to https://huggingface.co/new-space
+   - Name: `physical-ai-robotics-backend`
+   - SDK: Docker (or Gradio if using app.py entrypoint)
+   - Visibility: Public
+
+2. **Link to GitHub**:
+   - In Space Settings → Repository → Link to GitHub
+   - Select repository: `HassaanGhayas/physical-ai-robotics-textbook`
+   - Sync directory: `backend/`
+
+3. **Configure Environment Variables**:
+   - In Space Settings → Variables, add:
+     - `COHERE_API_KEY`: Your Cohere API key
+     - `QDRANT_API_KEY`: Your Qdrant API key
+     - `QDRANT_URL`: Your Qdrant cluster URL (e.g., https://xxx.cloud.qdrant.io)
+     - `COHERE_MODEL`: command-r-08-2024
+     - `QDRANT_COLLECTION_NAME`: rag_embedding
+     - `TARGET_DOCS_URL`: https://hassaanghayas.github.io/physical-ai-robotics-textbook/
+     - `TOP_K`: 5
+     - `LOG_LEVEL`: INFO
+
+4. **Push to Deploy**:
+   - Push changes to `001-book-creation` branch
+   - Hugging Face will automatically build and deploy
+   - Build time: 5-10 minutes
+
+5. **Verify Deployment**:
+   ```bash
+   # Check health endpoint
+   curl https://your-space-name.hf.space/health
+
+   # Test query
+   curl -X POST "https://your-space-name.hf.space/ask" \
+     -H "Content-Type: application/json" \
+     -d '{"query": "What is physical AI?", "top_k": 5}'
+   ```
+
+### Production URL
+Once deployed, your backend will be available at:
+```
+https://physical-ai-robotics-backend.hf.space
+```
+
+### CORS Configuration
+The API is configured to accept requests from:
+- `http://localhost:3000` (development)
+- `https://hassaanghayas.github.io` (production GitHub Pages)
+
+### Monitoring
+- Check Space logs for deployment issues
+- Monitor /health endpoint for service status
+- Track response times in API metadata
+
 ## Related Features
 
 - **001-qdrant-retrieval-testing**: Provides the underlying Qdrant retrieval functionality
