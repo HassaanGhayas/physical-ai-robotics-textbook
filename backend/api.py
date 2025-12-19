@@ -27,16 +27,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configure CORS
+# Configure CORS - allow all origins for HuggingFace Spaces deployment
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # Local development
-        "https://hassaanghayas.github.io"  # Production deployment
-    ],
+    allow_origins=["*"],  # Allow all origins for public API
     allow_credentials=False,
     allow_methods=["POST", "GET", "OPTIONS"],
-    allow_headers=["Content-Type"],
+    allow_headers=["*"],
     max_age=600,
 )
 
