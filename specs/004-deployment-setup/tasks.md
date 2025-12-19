@@ -232,9 +232,9 @@ Each phase is independently testable and deployable, allowing for continuous val
 
 ### Tasks
 
-- [ ] T043 [P] [US5] Create D:\my-web\.github\workflows\huggingface-deploy.yml with push trigger for 001-book-creation and path filter: backend/**
-- [ ] T044 [P] [US5] Add job to huggingface-deploy.yml that pushes backend/ to HF Space repository using HF_TOKEN (optional - can rely on HF GitHub sync instead)
-- [ ] T045 [US5] Add notification step to all workflows: use actions/github-script to comment on commit with deployment status
+- [X] T043 [P] [US5] Create D:\my-web\.github\workflows\huggingface-deploy.yml with push trigger for 001-book-creation and path filter: backend/**
+- [X] T044 [P] [US5] Add job to huggingface-deploy.yml that pushes backend/ to HF Space repository using HF_TOKEN (optional - can rely on HF GitHub sync instead)
+- [X] T045 [US5] Add notification step to all workflows: use actions/github-script to comment on commit with deployment status
 - [ ] T046 [US5] Test full pipeline: Make change affecting both frontend and backend, push, verify both deployments succeed
 
 **Story Complete When**: Backend changes trigger automatic HF deployment, notifications sent on success/failure
@@ -247,7 +247,7 @@ Each phase is independently testable and deployable, allowing for continuous val
 
 ### Tasks
 
-- [ ] T047 [P] Create D:\my-web\docs\deployment.md documenting complete deployment process, secrets configuration, troubleshooting guide
+- [X] T047 [P] Create D:\my-web\docs\deployment.md documenting complete deployment process, secrets configuration, troubleshooting guide
 - [ ] T048 Run full end-to-end deployment test: Create PR with frontend + backend changes, verify code review passes, merge, verify both deployments succeed
 
 **Phase Complete When**: Complete deployment documentation exists, end-to-end test passes
