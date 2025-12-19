@@ -2,9 +2,20 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [001-book-creation]
+    paths:
+      - 'src/**'
+      - 'docs/**'
+      - 'static/**'
+      - 'docusaurus.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
   pull_request:
-    branches: [main]
+    branches: [001-book-creation]
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -26,7 +37,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/001-book-creation'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
