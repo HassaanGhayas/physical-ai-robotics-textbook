@@ -149,17 +149,17 @@ Each phase is independently testable and deployable, allowing for continuous val
 
 ### Tasks
 
-- [ ] T023 [US3] Verify D:\my-web\.gitignore contains `.env` pattern (if not, add it)
-- [ ] T024 [P] [US3] Update D:\my-web\backend\.env.example to include all required secrets: COHERE_API_KEY, QDRANT_API_KEY, QDRANT_URL, NEON_DATABASE_URL (if used)
-- [ ] T025 [P] [US3] Add comments to .env.example explaining what each secret is for and how to obtain it
+- [X] T023 [US3] Verify D:\my-web\.gitignore contains `.env` pattern (if not, add it)
+- [X] T024 [P] [US3] Update D:\my-web\backend\.env.example to include all required secrets: COHERE_API_KEY, QDRANT_API_KEY, QDRANT_URL, NEON_DATABASE_URL (if used)
+- [X] T025 [P] [US3] Add comments to .env.example explaining what each secret is for and how to obtain it
 - [ ] T026 [US3] Configure GitHub Secrets: Go to repository Settings → Secrets and variables → Actions → New repository secret:
   - Add COHERE_API_KEY
   - Add QDRANT_API_KEY
   - Add QDRANT_URL
   - Add HF_TOKEN (optional, for automated deployment)
-- [ ] T027 [US3] Update D:\my-web\README.md with instructions for configuring secrets (GitHub + HF Spaces)
+- [X] T027 [US3] Update D:\my-web\README.md with instructions for configuring secrets (GitHub + HF Spaces)
 - [ ] T028 [US3] Test secret access by adding temporary step to deploy.yml: `echo "COHERE_API_KEY: ${{ secrets.COHERE_API_KEY != '' }}"` (verify true, then remove)
-- [ ] T029 [US3] Document secret rotation procedure in README.md or docs/deployment.md
+- [X] T029 [US3] Document secret rotation procedure in README.md or docs/deployment.md
 
 **Story Complete When**: Secrets configured in GitHub and HF, `.env` cannot be committed, `.env.example` documents all secrets
 
