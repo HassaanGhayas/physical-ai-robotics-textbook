@@ -1,0 +1,130 @@
+/**
+ * Card Component Styles
+ * Flexible card component with variants and states
+ */
+
+.card {
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  transition: all 200ms ease-out;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .card {
+    border-radius: 6px;
+  }
+}
+
+/* ============================================================================
+   Variants
+   ============================================================================ */
+
+/* Default variant: subtle border and small shadow */
+.default {
+  border: 1px solid var(--border-default);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Elevated variant: stronger shadow, no border */
+.elevated {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Outlined variant: border only, no shadow */
+.outlined {
+  border: 1px solid var(--border-strong);
+  box-shadow: none;
+}
+
+/* ============================================================================
+   Padding Variants
+   ============================================================================ */
+
+.padding-sm {
+  padding: 12px;
+}
+
+.padding-md {
+  padding: 16px;
+}
+
+.padding-lg {
+  padding: 24px;
+}
+
+/* Mobile padding adjustments */
+@media (max-width: 767px) {
+  .padding-sm {
+    padding: 10px;
+  }
+
+  .padding-md {
+    padding: 14px;
+  }
+
+  .padding-lg {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .padding-sm {
+    padding: 8px;
+  }
+
+  .padding-md {
+    padding: 12px;
+  }
+
+  .padding-lg {
+    padding: 16px;
+  }
+}
+
+/* ============================================================================
+   Interactive State
+   ============================================================================ */
+
+.interactive {
+  cursor: pointer;
+}
+
+.interactive:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.interactive:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.interactive:focus {
+  outline: 2px solid var(--interactive-focus);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   Dark Mode Adjustments
+   ============================================================================ */
+
+[data-theme='dark'] .default {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .elevated {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .interactive:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.5);
+}

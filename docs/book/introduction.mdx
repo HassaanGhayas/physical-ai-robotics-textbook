@@ -1,0 +1,142 @@
+---
+title: Introduction
+sidebar_position: 2
+description: Introduction to Physical AI and Humanoid Robotics
+---
+
+import HardwareSpecs from '@site/src/components/HardwareSpecs/HardwareSpecs';
+import CodeExamples from '@site/src/components/CodeExamples/CodeExamples';
+import TechnicalDiagrams from '@site/src/components/TechnicalDiagrams/TechnicalDiagrams';
+import BookNavigation from '@site/src/components/BookNavigation/BookNavigation';
+import ThemeSwitcher from '@site/src/components/ThemeSwitcher/ThemeSwitcher';
+
+# Introduction
+
+Welcome to the Physical AI & Humanoid Robotics course. This introduction module sets the foundation for understanding the intersection of artificial intelligence and physical systems.
+
+## Course Overview
+
+This course sits at the intersection of Physics Simulation, Visual Perception, and Generative AI. Our focus is on bridging the gap between the digital brain and the physical body. Students apply their AI knowledge to control Humanoid Robots in simulated and real-world environments.
+
+## Learning Objectives
+
+By the end of this course, you will be able to:
+
+- Understand the fundamentals of embodied AI and physical AI systems
+- Design and implement neural networks for controlling humanoid robots
+- Simulate physics-based environments for robot training
+- Apply vision-language-action models to real-world robotic tasks
+- Deploy AI models to edge computing platforms for real-time control
+
+## Prerequisites
+
+Before diving into this course, you should have:
+
+- Basic understanding of machine learning concepts
+- Familiarity with Python programming
+- Basic knowledge of linear algebra and calculus
+- Understanding of fundamental physics concepts (optional but helpful)
+
+## Course Structure
+
+The course is divided into seven modules:
+
+1. **Hardware Requirements** - Understanding the necessary hardware for development
+2. **Introduction** - Foundational concepts and overview
+3. **The Robotic Nervous System (ROS 2)** - Middleware for robot control
+4. **The Digital Twin (Gazebo & Unity)** - Physics simulation and environment building
+5. **The AI-Robot Brain (NVIDIA Isaac™)** - Advanced perception and training
+6. **Vision-Language-Action (VLA)** - Convergence of LLMs and Robotics
+7. **Assessments** - Practical evaluations of learned concepts
+
+## Getting Started
+
+This course emphasizes hands-on learning. We'll start with simulations before progressing to physical implementations. The approach is progressive, building complexity as you advance through the modules.
+
+## Hardware Recommendations
+
+<HardwareSpecs
+  name="Recommended Development Workstation"
+  category="High-Performance Computing"
+  specs={{
+    cpu: "AMD Ryzen 9 5900X or Intel i9-12900K",
+    gpu: "NVIDIA RTX 4090 or RTX A6000",
+    memory: "64GB DDR4-3200 or higher",
+    storage: "2TB NVMe SSD + 4TB HDD"
+  }}
+  cost={{
+    price: "~$4,500-$6,000",
+    reasoning: "Required for training large AI models and running complex simulations"
+  }}
+  pros={[
+    "Sufficient GPU power for AI training",
+    "Fast compilation times",
+    "Can run complex physics simulations",
+    "Future-proof for advanced projects"
+  ]}
+  cons={[
+    "High cost",
+    "Significant power consumption",
+    "Large physical footprint"
+  ]}
+/>
+
+## Sample Code Implementation
+
+<CodeExamples
+  title="Basic ROS2 Publisher Node"
+  description="A simple ROS2 node that publishes joint states for a humanoid robot"
+  language="python"
+  code={`import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import JointState
+from std_msgs.msg import Header
+import math
+import numpy as np
+
+class JointStatePublisher(Node):
+    def __init__(self):
+        super().__init__('joint_state_publisher')
+        self.publisher = self.create_publisher(JointState, 'joint_states', 10)
+        timer_period = 0.1  # seconds
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.joint_names = [
+            'left_hip_joint', 'left_knee_joint', 'left_ankle_joint',
+            'right_hip_joint', 'right_knee_joint', 'right_ankle_joint',
+            'left_shoulder_joint', 'left_elbow_joint',
+            'right_shoulder_joint', 'right_elbow_joint'
+        ]
+        self.i = 0
+
+    def timer_callback(self):
+        msg = JointState()
+        msg.header = Header()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.name = self.joint_names
+        # Generate sinusoidal motion for demonstration
+        positions = [math.sin(self.i + j * math.pi/5) for j in range(len(self.joint_names))]
+        msg.position = positions
+        msg.velocity = [0.0] * len(self.joint_names)
+        msg.effort = [0.0] * len(self.joint_names)
+
+        self.publisher.publish(msg)
+        self.i += 0.1
+
+def main(args=None):
+    rclpy.init(args=args)
+    joint_state_publisher = JointStatePublisher()
+
+    try:
+        rclpy.spin(joint_state_publisher)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        joint_state_publisher.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()`}
+  copyable={true}
+  expandable={true}
+  maxHeight="300px"
+/>

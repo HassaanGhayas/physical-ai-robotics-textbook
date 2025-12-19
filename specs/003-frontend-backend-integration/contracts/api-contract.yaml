@@ -1,0 +1,358 @@
+openapi: 3.0.3
+info:
+  title: RAG Chatbot API
+  description: |
+    REST API for the RAG (Retrieval-Augmented Generation) chatbot that provides
+    AI-generated answers based on document retrieval from the Physical AI & Humanoid Robotics knowledge base.
+
+    This API integrates:
+    - Cohere embeddings for query encoding
+    - Qdrant vector database for document retrieval
+    - Cohere chat models for answer generation
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.example.com
+    description: Production server
+
+paths:
+  /ask:
+    post:
+      summary: Submit a question to the RAG chatbot
+      description: |
+        Processes a user query through the RAG pipeline:
+        1. Generates embedding for the query using Cohere
+        2. Retrieves relevant document chunks from Qdrant
+        3. Generates an answer using OpenAI Agents SDK
+        4. Returns the answer with source citations
+      operationId: askQuestion
+      tags:
+        - Chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AskRequest'
+            examples:
+              basicQuery:
+                summary: Basic question
+                value:
+                  query: "What is physical AI?"
+              advancedQuery:
+                summary: Query with custom top_k
+                value:
+                  query: "How do humanoid robots use vision systems?"
+                  top_k: 3
+      responses:
+        '200':
+          description: Successfully generated answer with sources
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AskResponse'
+              examples:
+                successResponse:
+                  summary: Successful response with sources
+                  value:
+                    answer: "Physical AI refers to the integration of artificial intelligence with physical robotic systems, enabling robots to perceive, reason about, and interact with the real world."
+                    sources:
+                      - id: "550e8400-e29b-41d4-a716-446655440000"
+                        content: "Physical AI represents the convergence of artificial intelligence with mechanical systems, allowing robots to operate in complex real-world environments."
+                        url: "https://example.com/docs/physical-ai-intro"
+                        chunk_id: "chunk_001"
+                        document_id: "doc_physical_ai"
+                        similarity_score: 0.89
+                        position: 1
+                      - id: "550e8400-e29b-41d4-a716-446655440001"
+                        content: "Unlike traditional AI systems that operate in virtual environments, physical AI must handle sensor data, actuator control, and real-time decision making."
+                        url: "https://example.com/docs/physical-ai-challenges"
+                        chunk_id: "chunk_042"
+                        document_id: "doc_ai_challenges"
+                        similarity_score: 0.76
+                        position: 2
+                    query: "What is physical AI?"
+                    chunk_count: 2
+                    response_time_ms: 3245
+        '400':
+          description: Invalid request (empty query, invalid parameters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                emptyQuery:
+                  summary: Empty query error
+                  value:
+                    error: true
+                    message: "Query cannot be empty"
+                    status_code: 400
+                    type: "ValidationError"
+                invalidTopK:
+                  summary: Invalid top_k parameter
+                  value:
+                    error: true
+                    message: "top_k must be an integer between 1 and 20"
+                    status_code: 400
+                    type: "ValidationError"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internalError:
+                  summary: Internal server error
+                  value:
+                    error: true
+                    message: "An internal error occurred while processing your request"
+                    status_code: 500
+                    type: "InternalServerError"
+        '503':
+          description: Service temporarily unavailable (Qdrant or Cohere unavailable)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                serviceUnavailable:
+                  summary: Knowledge base unavailable
+                  value:
+                    error: true
+                    message: "Knowledge base temporarily unavailable, please try again"
+                    status_code: 503
+                    type: "ServiceUnavailable"
+
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Returns the health status of the API and its dependencies
+      operationId: healthCheck
+      tags:
+        - System
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "healthy"
+                version: "1.0.0"
+                timestamp: "2025-12-17T10:30:00Z"
+                services:
+                  cohere: "available"
+                  qdrant: "available"
+                  openai: "available"
+        '503':
+          description: Service is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "unhealthy"
+                version: "1.0.0"
+                timestamp: "2025-12-17T10:30:00Z"
+                services:
+                  cohere: "unavailable"
+                  qdrant: "available"
+                  openai: "available"
+
+components:
+  schemas:
+    AskRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: User's natural language question
+          minLength: 1
+          maxLength: 1000
+          example: "What is physical AI?"
+        top_k:
+          type: integer
+          description: Number of document chunks to retrieve (default: 5)
+          minimum: 1
+          maximum: 20
+          default: 5
+          example: 5
+        request_id:
+          type: string
+          format: uuid
+          description: Optional client-generated request ID for tracking
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+    AskResponse:
+      type: object
+      required:
+        - answer
+        - sources
+        - query
+        - chunk_count
+        - response_time_ms
+      properties:
+        answer:
+          type: string
+          description: AI-generated answer to the user's question
+          example: "Physical AI refers to the integration of artificial intelligence with physical robotic systems."
+        sources:
+          type: array
+          description: Retrieved document chunks used to generate the answer
+          items:
+            $ref: '#/components/schemas/Source'
+        query:
+          type: string
+          description: Original user query (echoed back)
+          example: "What is physical AI?"
+        chunk_count:
+          type: integer
+          description: Number of source chunks returned
+          minimum: 0
+          example: 3
+        response_time_ms:
+          type: number
+          description: Backend processing time in milliseconds
+          minimum: 0
+          example: 3245
+
+    Source:
+      type: object
+      required:
+        - id
+        - content
+        - url
+        - chunk_id
+        - document_id
+        - similarity_score
+        - position
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for this source
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        content:
+          type: string
+          description: Full text content of the document chunk
+          example: "Physical AI represents the convergence of artificial intelligence with mechanical systems."
+        url:
+          type: string
+          format: uri
+          description: URL to the original document
+          example: "https://example.com/docs/physical-ai-intro"
+        chunk_id:
+          type: string
+          description: Identifier for this specific chunk
+          example: "chunk_001"
+        document_id:
+          type: string
+          description: Identifier for the parent document
+          example: "doc_physical_ai"
+        similarity_score:
+          type: number
+          description: Relevance score from vector similarity search
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.89
+        position:
+          type: integer
+          description: Ranking position in the result set (1-based)
+          minimum: 1
+          example: 1
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+        - status_code
+        - type
+      properties:
+        error:
+          type: boolean
+          description: Always true for error responses
+          enum: [true]
+          example: true
+        message:
+          type: string
+          description: User-friendly error message
+          example: "Query cannot be empty"
+        status_code:
+          type: integer
+          description: HTTP status code
+          example: 400
+        type:
+          type: string
+          description: Error type category
+          enum:
+            - ValidationError
+            - ServiceUnavailable
+            - InternalServerError
+            - TimeoutError
+          example: "ValidationError"
+        details:
+          type: object
+          description: Optional additional error details
+          additionalProperties: true
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - version
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy, degraded]
+          description: Overall health status
+          example: "healthy"
+        version:
+          type: string
+          description: API version
+          example: "1.0.0"
+        timestamp:
+          type: string
+          format: date-time
+          description: Current server time
+          example: "2025-12-17T10:30:00Z"
+        services:
+          type: object
+          description: Status of dependent services
+          properties:
+            cohere:
+              type: string
+              enum: [available, unavailable]
+              example: "available"
+            qdrant:
+              type: string
+              enum: [available, unavailable]
+              example: "available"
+            openai:
+              type: string
+              enum: [available, unavailable]
+              example: "available"
+
+  securitySchemes: {}
+
+security: []
+
+tags:
+  - name: Chat
+    description: Chat and question-answering endpoints
+  - name: System
+    description: System health and monitoring endpoints
+
+externalDocs:
+  description: Full API Documentation
+  url: https://docs.example.com/api

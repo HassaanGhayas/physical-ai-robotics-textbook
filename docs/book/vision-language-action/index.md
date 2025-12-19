@@ -1,6 +1,6 @@
 ---
 title: Vision-Language-Action (VLA)
-sidebar_position: 1
+sidebar_position: 8
 description: The convergence of LLMs and Robotics for humanoid applications
 ---
 

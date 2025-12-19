@@ -1,0 +1,88 @@
+/**
+ * Spacing System
+ * Consistent spacing utilities following 4px base unit
+ */
+
+/* ============================================================================
+   Layout Constraints
+   ============================================================================ */
+.container-max-width {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: max(5vw, 16px);
+  padding-right: max(5vw, 16px);
+}
+
+/* Apply max-width to main Docusaurus containers */
+.main-wrapper,
+main.docMainContainer {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================================
+   Section Spacing (32px minimum between major sections)
+   ============================================================================ */
+.section-spacing-lg {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.section-spacing-md {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.section-spacing-sm {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+/* Apply to Docusaurus article sections */
+article > section,
+article > div {
+  margin-top: 32px;
+}
+
+article > section:first-child,
+article > div:first-child {
+  margin-top: 0;
+}
+
+/* ============================================================================
+   Subsection Spacing (16px between subsections)
+   ============================================================================ */
+.subsection-spacing {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+/* ============================================================================
+   Responsive Padding
+   ============================================================================ */
+
+/* Mobile padding (< 768px) */
+@media (max-width: 767px) {
+  .container-max-width {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Tablet padding (768px - 1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .container-max-width {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Desktop padding (1200px+) */
+@media (min-width: 1200px) {
+  .container-max-width {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}

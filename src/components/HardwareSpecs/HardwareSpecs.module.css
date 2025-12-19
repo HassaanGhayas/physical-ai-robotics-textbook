@@ -17,6 +17,12 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: box-shadow var(--ifm-transition-fast) ease,
     transform var(--ifm-transition-fast) ease;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .card:hover {
@@ -42,10 +48,12 @@
 .category {
   background-color: var(--ifm-color-primary-lightest);
   color: var(--ifm-color-primary-darker);
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 500;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .specRow {
@@ -129,6 +137,10 @@
     grid-template-columns: 1fr;
   }
 
+  .card {
+    padding: 1.25rem;
+  }
+
   .specRow {
     flex-direction: column;
     gap: 0.5rem;
@@ -137,5 +149,43 @@
   .proConRow {
     flex-direction: column;
     gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+
+  .card {
+    padding: 1rem;
+    border-radius: 6px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .name {
+    font-size: 1.1rem;
+  }
+
+  .category {
+    font-size: 0.75rem;
+  }
+
+  .specCol h4,
+  .costRow h4,
+  .reasoningRow h4,
+  .proConCol h4 {
+    font-size: 0.85rem;
+  }
+
+  .specCol p,
+  .costRow p,
+  .reasoningRow p {
+    font-size: 0.9rem;
   }
 }

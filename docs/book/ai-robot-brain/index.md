@@ -1,6 +1,6 @@
 ---
 title: The AI-Robot Brain (NVIDIA Isaac™)
-sidebar_position: 1
+sidebar_position: 7
 description: Advanced perception and training using NVIDIA Isaac for humanoid robotics
 ---
 

@@ -92,7 +92,7 @@ Each phase is independently testable and deployable, allowing for continuous val
 - [X] T011 [US1] Update D:\my-web\.github\workflows\deploy.yml: Change `branches: [main]` to `branches: [001-book-creation]` in push trigger
 - [X] T012 [US1] Add path filtering to D:\my-web\.github\workflows\deploy.yml to only trigger on frontend changes (src/, docs/, static/, docusaurus.config.ts, package.json)
 - [X] T013 [US1] Add concurrency group to D:\my-web\.github\workflows\deploy.yml to prevent overlapping deployments: `concurrency: { group: "pages", cancel-in-progress: false }`
-- [ ] T014 [US1] Test deployment by committing change to 001-book-creation and verifying GitHub Actions runs successfully
+- [X] T014 [US1] Test deployment by committing change to 001-book-creation and verifying GitHub Actions runs successfully
 
 **Story Complete When**: Push to 001-book-creation triggers workflow, builds successfully, deploys to GitHub Pages
 
