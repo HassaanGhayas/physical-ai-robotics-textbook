@@ -44,10 +44,10 @@ const config: Config = {
   },
 
   customFields: {
-    ragApiUrl: process.env.REACT_APP_API_URL || 'http://localhost:8000',
-    chatbotEnabled: process.env.REACT_APP_CHATBOT_ENABLED === 'true',
+    ragApiUrl: process.env.REACT_APP_API_URL || 'https://iterateee-physical-ai-robotics-backend.hf.space',
+    chatbotEnabled: process.env.REACT_APP_CHATBOT_ENABLED !== 'false', // Enabled by default
     maxRetries: parseInt(process.env.REACT_APP_MAX_RETRIES || '3', 10),
-    timeoutMs: parseInt(process.env.REACT_APP_TIMEOUT_MS || '10000', 10),
+    timeoutMs: parseInt(process.env.REACT_APP_TIMEOUT_MS || '30000', 10), // 30s for production
   },
 
   presets: [
