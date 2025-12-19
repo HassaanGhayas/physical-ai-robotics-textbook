@@ -117,14 +117,14 @@ Each phase is independently testable and deployable, allowing for continuous val
 
 ### Tasks
 
-- [ ] T015 [P] [US2] Create D:\my-web\.github\workflows\code-review.yml with pull_request trigger for 001-book-creation branch
-- [ ] T016 [P] [US2] Add lint-frontend job to code-review.yml: checkout, setup Node.js 20, run `npm ci`, run `npm run lint`
-- [ ] T017 [P] [US2] Add format-check-frontend job to code-review.yml: run `npm run format:check`
-- [ ] T018 [P] [US2] Add lint-backend job to code-review.yml: checkout, setup Python 3.11, install ruff/black, run `ruff check backend/`
-- [ ] T019 [P] [US2] Add format-check-backend job to code-review.yml: run `black --check backend/`
+- [X] T015 [P] [US2] Create D:\my-web\.github\workflows\code-review.yml with pull_request trigger for 001-book-creation branch
+- [X] T016 [P] [US2] Add lint-frontend job to code-review.yml: checkout, setup Node.js 20, run `npm ci`, run `npm run lint`
+- [X] T017 [P] [US2] Add format-check-frontend job to code-review.yml: run `npm run format:check`
+- [X] T018 [P] [US2] Add lint-backend job to code-review.yml: checkout, setup Python 3.11, install ruff/black, run `ruff check backend/`
+- [X] T019 [P] [US2] Add format-check-backend job to code-review.yml: run `black --check backend/`
 - [ ] T020 [US2] Configure GitHub branch protection rules: Settings → Branches → 001-book-creation → Require status checks (lint-frontend, format-check-frontend, lint-backend, format-check-backend)
 - [ ] T021 [US2] Test code review by creating PR with lint error, verify workflow blocks merge
-- [ ] T022 [US2] Document code review workflow in D:\my-web\README.md or docs/ (optional)
+- [X] T022 [US2] Document code review workflow in D:\my-web\README.md or docs/ (optional)
 
 **Story Complete When**: PRs to 001-book-creation run automated code review, blocking merge if issues found
 
