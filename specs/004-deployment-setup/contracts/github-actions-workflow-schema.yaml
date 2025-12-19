@@ -1,0 +1,344 @@
+# GitHub Actions Workflow Schema
+# Defines the structure for deployment workflows (deploy.yml, code-review.yml)
+
+name: GitHub Actions Workflow Schema
+version: 1.0.0
+description: Contract for GitHub Actions workflows used in deployment pipeline
+
+# Example: .github/workflows/deploy.yml (Frontend Deployment)
+frontend_deployment_workflow:
+  name: Deploy to GitHub Pages
+
+  on:
+    push:
+      branches:
+        - 001-book-creation  # Main deployment branch
+      paths:
+        - src/**
+        - docs/**
+        - static/**
+        - docusaurus.config.ts
+        - package.json
+        - package-lock.json
+    workflow_dispatch:  # Manual trigger
+
+  permissions:
+    contents: write  # Required for peaceiris/actions-gh-pages
+
+  jobs:
+    deploy:
+      name: Build and Deploy Frontend
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '20'
+            cache: 'npm'
+
+        - name: Install dependencies
+          run: npm ci
+
+        - name: Build Docusaurus site
+          run: npm run build
+          env:
+            NODE_ENV: production
+
+        - name: Deploy to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v4
+          if: github.ref == 'refs/heads/001-book-creation'
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./build
+            user_name: github-actions[bot]
+            user_email: 41898282+github-actions[bot]@users.noreply.github.com
+            cname: false  # Set to custom domain if using one
+
+      outputs:
+        deployment_url:
+          value: https://hassaanghayas.github.io/physical-ai-robotics-textbook
+        deployment_status:
+          value: ${{ job.status }}
+
+# Example: .github/workflows/code-review.yml (Code Quality Checks)
+code_review_workflow:
+  name: Code Review
+
+  on:
+    pull_request:
+      branches:
+        - 001-book-creation
+    push:
+      branches:
+        - 001-book-creation
+
+  jobs:
+    lint-frontend:
+      name: Lint Frontend Code
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '20'
+            cache: 'npm'
+
+        - name: Install dependencies
+          run: npm ci
+
+        - name: Run ESLint
+          run: npm run lint
+
+        - name: Check formatting with Prettier
+          run: npm run format:check
+
+      outputs:
+        lint_status:
+          value: ${{ job.status }}
+
+    lint-backend:
+      name: Lint Backend Code
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.11'
+            cache: 'pip'
+
+        - name: Install linting tools
+          run: |
+            pip install ruff black
+
+        - name: Run Ruff
+          run: |
+            cd backend
+            ruff check . --output-format=github
+
+        - name: Check formatting with Black
+          run: |
+            cd backend
+            black --check --verbose .
+
+      outputs:
+        lint_status:
+          value: ${{ job.status }}
+
+# Example: .github/workflows/huggingface-deploy.yml (Backend Deployment)
+backend_deployment_workflow:
+  name: Deploy to Hugging Face Spaces
+
+  on:
+    push:
+      branches:
+        - 001-book-creation
+      paths:
+        - backend/**
+    workflow_dispatch:
+
+  jobs:
+    deploy:
+      name: Deploy Backend to HF
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.11'
+
+        - name: Install dependencies
+          run: |
+            cd backend
+            pip install -r requirements.txt
+
+        - name: Run backend tests
+          run: |
+            cd backend
+            pytest tests/ -v
+
+        - name: Trigger HF Space rebuild
+          run: |
+            # Option 1: HF will auto-sync from GitHub (no action needed)
+            echo "Hugging Face Space will auto-sync from GitHub"
+
+            # Option 2: Manual push to HF repo (if needed)
+            # git remote add hf https://huggingface.co/spaces/username/space-name
+            # git push hf main:main
+
+      outputs:
+        space_url:
+          value: https://hassaanghayas-physical-ai-robotics-backend.hf.space
+        deployment_status:
+          value: ${{ job.status }}
+
+# Schema for workflow outputs (used by other workflows or external systems)
+workflow_outputs:
+  type: object
+  properties:
+    deployment_url:
+      type: string
+      format: uri
+      description: Public URL where the application is deployed
+      examples:
+        - https://hassaanghayas.github.io/physical-ai-robotics-textbook
+        - https://username-space-name.hf.space
+
+    deployment_status:
+      type: string
+      enum:
+        - success
+        - failure
+        - cancelled
+      description: Final status of the deployment job
+
+    lint_status:
+      type: string
+      enum:
+        - success
+        - failure
+      description: Status of code review/linting checks
+
+    space_url:
+      type: string
+      format: uri
+      description: URL of Hugging Face Space (backend only)
+
+# Common workflow environment variables
+common_env_vars:
+  NODE_ENV:
+    description: Node.js environment (development, production)
+    required: false
+    default: production
+
+  GITHUB_TOKEN:
+    description: Auto-generated GitHub token for API access
+    required: true
+    provided_by: GitHub Actions
+
+  HF_TOKEN:
+    description: Hugging Face access token (for manual deployment)
+    required: false
+    stored_in: GitHub Secrets
+
+# Secrets required in GitHub repository settings
+required_github_secrets:
+  GITHUB_TOKEN:
+    description: Auto-provided by GitHub Actions (no setup needed)
+    scope: Repository
+
+  HF_TOKEN:
+    description: Hugging Face access token (optional, for manual deployment)
+    scope: Repository
+    how_to_get: https://huggingface.co/settings/tokens
+    permissions:
+      - write
+
+# Branch protection rules (recommended)
+branch_protection:
+  branch: 001-book-creation
+  rules:
+    require_pull_request_reviews:
+      required: false  # Small team, PRs optional
+
+    require_status_checks_to_pass:
+      required: true
+      strict: false  # Don't require branch to be up-to-date
+      checks:
+        - lint-frontend
+        - lint-backend
+
+    require_linear_history:
+      required: false
+
+    allow_force_pushes:
+      enabled: false
+
+    allow_deletions:
+      enabled: false
+
+# Concurrency control (prevent simultaneous deployments)
+concurrency:
+  group: deployment-${{ github.ref }}
+  cancel-in-progress: false  # Let current deployment finish
+
+# Timeout limits
+timeouts:
+  frontend_build:
+    max_minutes: 10
+    typical_minutes: 3-5
+
+  backend_build:
+    max_minutes: 15
+    typical_minutes: 6-10
+
+  code_review:
+    max_minutes: 5
+    typical_minutes: 1-2
+
+# Caching strategy
+caching:
+  npm_packages:
+    enabled: true
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    paths:
+      - ~/.npm
+
+  pip_packages:
+    enabled: true
+    key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+    paths:
+      - ~/.cache/pip
+
+# Notifications (optional, can be added later)
+notifications:
+  slack:
+    enabled: false
+    webhook_url_secret: SLACK_WEBHOOK_URL
+    on_failure: true
+    on_success: false
+
+  email:
+    enabled: true  # GitHub default
+    recipients:
+      - repository_admins
+    on_failure: true
+    on_success: false
+
+# Monitoring and observability
+monitoring:
+  github_actions_logs:
+    retention_days: 90
+    access: Repository collaborators
+
+  deployment_metrics:
+    track:
+      - build_duration
+      - deployment_frequency
+      - success_rate
+      - time_to_deploy
+
+    collection_method: GitHub Actions insights
+
+# Versioning
+schema_version: 1.0.0
+last_updated: 2025-12-19
+compatible_with:
+  - GitHub Actions
+  - GitHub Pages
+  - Hugging Face Spaces

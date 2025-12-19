@@ -1,0 +1,68 @@
+/**
+ * Background Texture Patterns
+ * Subtle SVG patterns for visual interest (2-5% opacity)
+ */
+
+/* ============================================================================
+   Pattern Definitions
+   ============================================================================ */
+:root {
+  /* Dot pattern for light mode */
+  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='2' fill='%23000' opacity='0.05'/%3E%3C/svg%3E");
+
+  /* Grid pattern */
+  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L40 0 40 40 0 40z' fill='none' stroke='%23000' stroke-width='1' opacity='0.03'/%3E%3C/svg%3E");
+
+  /* Diagonal lines */
+  --pattern-diagonal: url("data:image/svg+xml,%3Csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L30 30M30 0L0 30' stroke='%23000' stroke-width='1' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ============================================================================
+   Dark Mode Pattern Variants
+   ============================================================================ */
+[data-theme='dark'] {
+  /* Dot pattern for dark mode (white dots) */
+  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='2' fill='%23fff' opacity='0.05'/%3E%3C/svg%3E");
+
+  /* Grid pattern for dark mode */
+  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L40 0 40 40 0 40z' fill='none' stroke='%23fff' stroke-width='1' opacity='0.03'/%3E%3C/svg%3E");
+
+  /* Diagonal lines for dark mode */
+  --pattern-diagonal: url("data:image/svg+xml,%3Csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L30 30M30 0L0 30' stroke='%23fff' stroke-width='1' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ============================================================================
+   Pattern Application
+   ============================================================================ */
+
+/* Apply background pattern to body */
+body {
+  background-image: var(--pattern-dots);
+  background-repeat: repeat;
+  background-size: 20px 20px;
+  background-attachment: scroll; /* Better performance than 'fixed' */
+}
+
+/* Optional: Different patterns for specific sections */
+.pattern-grid {
+  background-image: var(--pattern-grid);
+  background-repeat: repeat;
+  background-size: 40px 40px;
+}
+
+.pattern-diagonal {
+  background-image: var(--pattern-diagonal);
+  background-repeat: repeat;
+  background-size: 30px 30px;
+}
+
+/* ============================================================================
+   Accessibility: Disable patterns for reduced motion
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .pattern-grid,
+  .pattern-diagonal {
+    background-image: none; /* Disable patterns for users with motion sensitivity */
+  }
+}

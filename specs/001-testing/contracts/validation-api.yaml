@@ -1,0 +1,660 @@
+openapi: 3.0.3
+info:
+  title: Validation Service API
+  description: |
+    REST API for the automated checking and testing system. Provides endpoints for
+    triggering validations, retrieving results, and querying test execution history.
+  version: 1.0.0
+  contact:
+    name: Physical AI & Humanoid Robotics Platform
+    url: https://hassaanghayas.github.io/physical-ai-robotics-textbook
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local development
+  - url: https://validation.example.com/api/v1
+    description: Production
+
+tags:
+  - name: validation
+    description: Validation execution and results
+  - name: history
+    description: Test execution history and queries
+  - name: flaky-tests
+    description: Flaky test detection and management
+
+paths:
+  /validate:
+    post:
+      summary: Trigger full validation pipeline
+      description: Executes complete validation including code quality, test suites, and deployment checks
+      operationId: triggerValidation
+      tags:
+        - validation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidationRequest'
+      responses:
+        '202':
+          description: Validation accepted and queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationAccepted'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Service unavailable (too many concurrent validations)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /validate/quality:
+    post:
+      summary: Run only code quality checks
+      description: Executes linting, complexity analysis, and coverage checks
+      operationId: validateQuality
+      tags:
+        - validation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidationRequest'
+      responses:
+        '202':
+          description: Quality validation accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationAccepted'
+
+  /validate/tests:
+    post:
+      summary: Run only test suites
+      description: Executes unit, integration, and E2E tests
+      operationId: validateTests
+      tags:
+        - validation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestValidationRequest'
+      responses:
+        '202':
+          description: Test validation accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationAccepted'
+
+  /validate/deployment:
+    post:
+      summary: Run only deployment checks
+      description: Validates configuration, dependencies, and environment compatibility
+      operationId: validateDeployment
+      tags:
+        - validation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidationRequest'
+      responses:
+        '202':
+          description: Deployment validation accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationAccepted'
+
+  /results/{run_id}:
+    get:
+      summary: Get validation results
+      description: Retrieve complete results for a specific validation run
+      operationId: getResults
+      tags:
+        - validation
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Validation run identifier
+      responses:
+        '200':
+          description: Validation results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationRun'
+        '404':
+          description: Run not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /results/{run_id}/status:
+    get:
+      summary: Get validation status
+      description: Lightweight endpoint to check validation progress
+      operationId: getStatus
+      tags:
+        - validation
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Validation status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  run_id:
+                    type: string
+                    format: uuid
+                  status:
+                    $ref: '#/components/schemas/ValidationStatus'
+                  progress_percent:
+                    type: number
+                    format: float
+                    minimum: 0
+                    maximum: 100
+                  current_phase:
+                    type: string
+                    enum: [quality, unit_tests, integration_tests, e2e_tests, deployment]
+
+  /history:
+    get:
+      summary: Query validation history
+      description: Search and filter past validation runs
+      operationId: queryHistory
+      tags:
+        - history
+      parameters:
+        - name: branch
+          in: query
+          schema:
+            type: string
+          description: Filter by branch name
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ValidationStatus'
+        - name: since
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: ISO 8601 timestamp for start of range
+        - name: until
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: ISO 8601 timestamp for end of range
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: List of validation runs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ValidationRunSummary'
+
+  /history/tests/{test_id}:
+    get:
+      summary: Get test execution history
+      description: Retrieve execution history for a specific test
+      operationId: getTestHistory
+      tags:
+        - history
+      parameters:
+        - name: test_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 50
+      responses:
+        '200':
+          description: Test execution history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestCase'
+
+  /flaky-tests:
+    get:
+      summary: List detected flaky tests
+      description: Get all tests currently identified as flaky
+      operationId: listFlakyTests
+      tags:
+        - flaky-tests
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active_flaky, resolved, false_positive]
+          description: Filter by flaky test status
+        - name: confidence_threshold
+          in: query
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 1
+            default: 0.95
+      responses:
+        '200':
+          description: List of flaky tests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  flaky_tests:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FlakyTestRecord'
+
+  /flaky-tests/{test_id}:
+    get:
+      summary: Get flaky test details
+      description: Retrieve detailed information about a specific flaky test
+      operationId: getFlakyTest
+      tags:
+        - flaky-tests
+      parameters:
+        - name: test_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Flaky test details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlakyTestRecord'
+        '404':
+          description: Flaky test record not found
+
+    patch:
+      summary: Update flaky test status
+      description: Mark flaky test as resolved or false positive
+      operationId: updateFlakyTest
+      tags:
+        - flaky-tests
+      parameters:
+        - name: test_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [resolved, false_positive]
+                investigation_notes:
+                  type: string
+      responses:
+        '200':
+          description: Flaky test status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlakyTestRecord'
+
+components:
+  schemas:
+    ValidationRequest:
+      type: object
+      required:
+        - repository
+        - branch
+        - commit_sha
+      properties:
+        repository:
+          type: string
+          description: Repository path or URL
+          example: "git@github.com:user/repo.git"
+        branch:
+          type: string
+          description: Git branch name
+          example: "main"
+        commit_sha:
+          type: string
+          description: Git commit hash
+          example: "a1b2c3d4e5f6"
+        trigger_source:
+          type: string
+          enum: [manual, pre_commit, ci_cd, scheduled]
+          default: manual
+        user:
+          type: string
+          description: User triggering validation (for manual runs)
+
+    TestValidationRequest:
+      allOf:
+        - $ref: '#/components/schemas/ValidationRequest'
+        - type: object
+          properties:
+            suite_types:
+              type: array
+              items:
+                type: string
+                enum: [unit, integration, e2e]
+              description: Which test suites to run (default: all)
+
+    ValidationAccepted:
+      type: object
+      properties:
+        run_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending]
+        message:
+          type: string
+        estimated_duration_seconds:
+          type: number
+          format: float
+
+    ValidationRun:
+      type: object
+      required:
+        - run_id
+        - timestamp
+        - status
+        - repository
+        - branch
+        - commit_sha
+      properties:
+        run_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        trigger_source:
+          type: string
+          enum: [manual, pre_commit, ci_cd, scheduled]
+        status:
+          $ref: '#/components/schemas/ValidationStatus'
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        duration_seconds:
+          type: number
+          format: float
+        repository:
+          type: string
+        branch:
+          type: string
+        commit_sha:
+          type: string
+        user:
+          type: string
+        quality_report:
+          $ref: '#/components/schemas/CodeQualityReport'
+        test_results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSuiteResult'
+        deployment_checklist:
+          $ref: '#/components/schemas/DeploymentChecklist'
+
+    ValidationRunSummary:
+      type: object
+      properties:
+        run_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/ValidationStatus'
+        duration_seconds:
+          type: number
+        branch:
+          type: string
+        commit_sha:
+          type: string
+
+    ValidationStatus:
+      type: string
+      enum: [pending, running, passed, failed, error, timeout]
+
+    CodeQualityReport:
+      type: object
+      properties:
+        report_id:
+          type: string
+          format: uuid
+        run_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [passed, failed, warning]
+        linting:
+          type: object
+        complexity:
+          type: object
+        coverage:
+          type: object
+        security:
+          type: object
+        summary:
+          type: object
+
+    TestSuiteResult:
+      type: object
+      properties:
+        result_id:
+          type: string
+          format: uuid
+        run_id:
+          type: string
+          format: uuid
+        suite_type:
+          type: string
+          enum: [unit, integration, e2e]
+        status:
+          type: string
+          enum: [passed, failed, error, skipped]
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        duration_seconds:
+          type: number
+        total_tests:
+          type: integer
+        passed_count:
+          type: integer
+        failed_count:
+          type: integer
+        skipped_count:
+          type: integer
+        error_count:
+          type: integer
+        flaky_tests_detected:
+          type: array
+          items:
+            type: string
+
+    DeploymentChecklist:
+      type: object
+      properties:
+        checklist_id:
+          type: string
+          format: uuid
+        run_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [passed, failed, warning]
+        configuration:
+          type: object
+        dependencies:
+          type: object
+        compatibility:
+          type: object
+
+    TestCase:
+      type: object
+      properties:
+        test_id:
+          type: string
+        test_name:
+          type: string
+        test_type:
+          type: string
+          enum: [unit, integration, e2e]
+        file_path:
+          type: string
+        execution_history:
+          type: array
+          items:
+            type: object
+        flakiness_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        is_flaky:
+          type: boolean
+        average_duration_seconds:
+          type: number
+
+    FlakyTestRecord:
+      type: object
+      properties:
+        record_id:
+          type: string
+          format: uuid
+        test_id:
+          type: string
+        detected_at:
+          type: string
+          format: date-time
+        last_flake_at:
+          type: string
+          format: date-time
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        pass_rate:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        sample_size:
+          type: integer
+          minimum: 10
+        consecutive_passes:
+          type: integer
+        status:
+          type: string
+          enum: [active_flaky, resolved, false_positive]
+        execution_pattern:
+          type: array
+          items:
+            type: boolean
+        failure_modes:
+          type: array
+          items:
+            type: object
+        investigation_notes:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object

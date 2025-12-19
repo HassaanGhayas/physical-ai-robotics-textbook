@@ -1,0 +1,8 @@
+{
+  "label": "AI-Robot Brain",
+  "position": 5,
+  "link": {
+    "type": "doc",
+    "id": "book/ai-robot-brain/index"
+  }
+}

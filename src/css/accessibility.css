@@ -1,0 +1,261 @@
+/**
+ * Accessibility Styles
+ * Focus management, skip links, and ARIA enhancements
+ */
+
+/* ============================================================================
+   Focus Styles
+   ============================================================================ */
+
+/* Remove default outline and add custom focus ring */
+*:focus {
+  outline: none;
+}
+
+/* Custom focus ring with high contrast */
+*:focus-visible {
+  outline: 2px solid var(--interactive-focus, #3b82f6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Focus within for composite components */
+*:focus-within {
+  outline: none;
+}
+
+/* Keyboard navigation indicator */
+body.using-keyboard *:focus {
+  outline: 2px solid var(--interactive-focus, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Dark mode focus adjustments */
+[data-theme='dark'] *:focus-visible {
+  outline-color: #60a5fa;
+}
+
+/* ============================================================================
+   Skip Links
+   ============================================================================ */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #404040);
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  border: 2px solid var(--border-strong, #d4d4d4);
+  font-weight: 600;
+  z-index: 9999;
+  transition: top 200ms ease-out;
+  max-width: calc(100vw - 32px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--interactive-focus, #3b82f6);
+  outline-offset: 2px;
+}
+
+[data-theme='dark'] .skip-link {
+  background: var(--bg-primary, #0a0a0a);
+  color: var(--text-primary, #fafafa);
+  border-color: var(--border-strong, #525252);
+}
+
+@media (max-width: 480px) {
+  .skip-link {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    max-width: calc(100vw - 24px);
+  }
+}
+
+@media (max-width: 360px) {
+  .skip-link {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    max-width: calc(100vw - 16px);
+  }
+}
+
+/* ============================================================================
+   Screen Reader Only Content
+   ============================================================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ============================================================================
+   High Contrast Mode Support
+   ============================================================================ */
+
+@media (prefers-contrast: high) {
+  * {
+    border-width: 2px !important;
+  }
+
+  *:focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+
+  button,
+  a {
+    font-weight: 600;
+  }
+}
+
+/* ============================================================================
+   Reduced Motion
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================================
+   Interactive Element States
+   ============================================================================ */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--interactive-focus, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+   ARIA Live Regions
+   ============================================================================ */
+
+[aria-live] {
+  position: relative;
+}
+
+[aria-live="assertive"] {
+  /* Announce immediately */
+}
+
+[aria-live="polite"] {
+  /* Announce when convenient */
+}
+
+/* ============================================================================
+   Keyboard Navigation Helpers
+   ============================================================================ */
+
+/* Tab order indicator (for development) */
+[tabindex]:not([tabindex="-1"]) {
+  /* Visible tab order in dev mode */
+}
+
+/* Focus trap boundaries */
+.focus-trap {
+  position: relative;
+}
+
+.focus-trap-sentinel {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================================================
+   Touch Target Sizes (WCAG 2.5.5)
+   ============================================================================ */
+
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* ============================================================================
+   Color Contrast Helpers
+   ============================================================================ */
+
+/* Ensure text meets WCAG AA contrast ratios */
+.contrast-text-primary {
+  color: var(--text-primary);
+}
+
+.contrast-text-secondary {
+  color: var(--text-secondary);
+}
+
+/* ============================================================================
+   Focus Management for Modals and Overlays
+   ============================================================================ */
+
+[role="dialog"],
+[role="alertdialog"] {
+  position: relative;
+}
+
+[role="dialog"]:focus,
+[role="alertdialog"]:focus {
+  outline: none;
+}
+
+/* Backdrop for modals */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+[data-theme='dark'] .modal-backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}

@@ -1,0 +1,157 @@
+/**
+ * Typography System
+ * Responsive typography scale with Inter Variable font
+ */
+
+/* ============================================================================
+   Font Configuration
+   ============================================================================ */
+:root {
+  /* Set Inter as primary font with optimized features */
+  --ifm-font-family-base: 'Inter Variable', system-ui, -apple-system,
+                          BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Enable OpenType features for better typography */
+  font-feature-settings: 'cv11', 'ss01';
+  font-variation-settings: 'opsz' auto;
+
+  /* Line height for improved readability */
+  --ifm-line-height-base: 1.5;
+}
+
+/* Optimize font loading */
+@supports (font-variation-settings: normal) {
+  :root {
+    font-family: 'Inter Variable', sans-serif;
+  }
+}
+
+/* ============================================================================
+   Typography Scale
+   ============================================================================ */
+
+/* Display Text (Hero sections) */
+.text-display {
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+/* Headings */
+h1, .h1 {
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+h2, .h2 {
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+h3, .h3 {
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.375;
+  letter-spacing: 0;
+}
+
+h4, .h4 {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.375;
+  letter-spacing: 0;
+}
+
+h5, .h5 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+h6, .h6 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+/* Body Text */
+body, .text-body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.text-body-large {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.625;
+  letter-spacing: 0;
+}
+
+.text-body-small {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.text-caption {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+/* ============================================================================
+   Responsive Typography
+   ============================================================================ */
+
+/* Mobile adjustments (< 768px) */
+@media (max-width: 767px) {
+  .text-display {
+    font-size: 48px;
+  }
+
+  h1, .h1 {
+    font-size: 36px;
+  }
+
+  h2, .h2 {
+    font-size: 30px;
+  }
+
+  h3, .h3 {
+    font-size: 24px;
+  }
+
+  h4, .h4 {
+    font-size: 20px;
+  }
+
+  h5, .h5 {
+    font-size: 18px;
+  }
+
+  h6, .h6 {
+    font-size: 16px;
+  }
+}
+
+/* Tablet adjustments (768px - 1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .text-display {
+    font-size: 60px;
+  }
+
+  h1, .h1 {
+    font-size: 42px;
+  }
+}

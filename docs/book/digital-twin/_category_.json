@@ -1,0 +1,8 @@
+{
+  "label": "Digital Twin",
+  "position": 4,
+  "link": {
+    "type": "doc",
+    "id": "book/digital-twin/index"
+  }
+}

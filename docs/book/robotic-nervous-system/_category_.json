@@ -1,0 +1,8 @@
+{
+  "label": "Robotic Nervous System",
+  "position": 3,
+  "link": {
+    "type": "doc",
+    "id": "book/robotic-nervous-system/index"
+  }
+}

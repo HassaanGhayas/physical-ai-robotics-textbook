@@ -3,7 +3,10 @@
     "allow": [
       "Bash(git fetch --all --prune)",
       "Bash(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/update-agent-context.ps1\" -AgentType claude)",
-      "Bash(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json -RequireTasks -IncludeTasks)"
+      "Bash(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json -RequireTasks -IncludeTasks)",
+      "Bash(.specify/scripts/powershell/create-new-feature.ps1 -Json \"@prompt.md\" -Json -Number 1 -ShortName \"embedding-pipeline\" \"Embedding Pipeline Setup\")",
+      "Bash(.specify/scripts/powershell/check-prerequisites.ps1:*)",
+      "Bash(.specify/scripts/bash/create-phr.sh --title \"Embedding Pipeline Implementation\" --stage green --json)"
     ]
   }
 }

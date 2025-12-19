@@ -1,0 +1,139 @@
+version: '3.8'
+
+# Validation Service Docker Compose Configuration
+
+services:
+  # ============================================================================
+  # Main Validation Service
+  # ============================================================================
+  validation-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: validation-service
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - VALIDATION_ENV=${VALIDATION_ENV:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ENABLE_QUALITY_VALIDATION=${ENABLE_QUALITY_VALIDATION:-true}
+      - ENABLE_TEST_EXECUTION=${ENABLE_TEST_EXECUTION:-true}
+      - ENABLE_DEPLOYMENT_VALIDATION=${ENABLE_DEPLOYMENT_VALIDATION:-true}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro  # For running validations on other containers
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - validation-network
+
+  # ============================================================================
+  # Development Service
+  # ============================================================================
+  validation-service-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: validation-service-dev
+    profiles:
+      - development
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - VALIDATION_ENV=development
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - .:/app
+      - /app/.venv  # Exclude venv from mount
+    restart: "no"
+    networks:
+      - validation-network
+
+  # ============================================================================
+  # Test Runner
+  # ============================================================================
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: validation-test-runner
+    profiles:
+      - testing
+    command: pytest -v --cov=src --cov-report=html
+    environment:
+      - VALIDATION_ENV=test
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - .:/app
+      - ./htmlcov:/app/htmlcov
+    networks:
+      - validation-network
+
+  # ============================================================================
+  # Redis (Optional - for caching/queuing)
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: validation-redis
+    profiles:
+      - full
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - validation-network
+
+  # ============================================================================
+  # PostgreSQL (Optional - for persistent storage)
+  # ============================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: validation-postgres
+    profiles:
+      - full
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-validation}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-validation_secret}
+      - POSTGRES_DB=${POSTGRES_DB:-validation_service}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-validation}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - validation-network
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  validation-network:
+    driver: bridge
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  redis-data:
+  postgres-data:

@@ -1,6 +1,6 @@
 ---
 title: The Digital Twin (Gazebo & Unity)
-sidebar_position: 1
+sidebar_position: 6
 description: Physics simulation and environment building for humanoid robots
 ---
 

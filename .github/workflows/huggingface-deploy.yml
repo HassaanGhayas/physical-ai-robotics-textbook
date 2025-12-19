@@ -1,0 +1,107 @@
+name: Deploy to Hugging Face Spaces
+
+on:
+  push:
+    branches: [001-book-creation]
+    paths:
+      - 'backend/**'
+      - '!backend/README.md'
+      - '!backend/*.md'
+
+  workflow_dispatch:  # Allow manual triggering
+
+concurrency:
+  group: huggingface-deploy
+  cancel-in-progress: false
+
+jobs:
+  notify-deployment-start:
+    name: Notify Deployment Started
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment started notification
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commitSha = context.sha.substring(0, 7);
+            const commitMessage = context.payload.head_commit?.message || 'No message';
+            const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}`;
+
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: `🚀 **Backend Deployment Started**\n\nCommit: [\`${commitSha}\`](${commitUrl})\nMessage: ${commitMessage}\n\n⏳ Hugging Face Spaces will automatically sync and rebuild the backend.\nThis typically takes 5-10 minutes.\n\nCheck deployment status at: https://huggingface.co/spaces/[your-space-name]`
+            });
+
+  # Note: Actual deployment is handled by Hugging Face Spaces GitHub sync
+  # This workflow primarily serves as a notification and validation step
+
+  validate-backend:
+    name: Validate Backend Code
+    runs-on: ubuntu-latest
+    needs: notify-deployment-start
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+
+      - name: Validate backend structure
+        run: |
+          echo "✓ Checking required files..."
+          test -f backend/app.py || (echo "❌ Missing backend/app.py" && exit 1)
+          test -f backend/api.py || (echo "❌ Missing backend/api.py" && exit 1)
+          test -f backend/requirements.txt || (echo "❌ Missing backend/requirements.txt" && exit 1)
+          test -f backend/.env.example || (echo "❌ Missing backend/.env.example" && exit 1)
+          echo "✓ All required backend files present"
+
+      - name: Check Python syntax
+        run: |
+          python -m py_compile backend/app.py
+          python -m py_compile backend/api.py
+          echo "✓ Python syntax validation passed"
+
+  notify-deployment-status:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [notify-deployment-start, validate-backend]
+    if: always()
+
+    steps:
+      - name: Deployment status notification
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commitSha = context.sha.substring(0, 7);
+            const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}`;
+            const jobUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            const validateStatus = '${{ needs.validate-backend.result }}';
+
+            let status, emoji, message;
+            if (validateStatus === 'success') {
+              status = 'Validation Passed';
+              emoji = '✅';
+              message = 'Backend validation passed. Hugging Face Spaces is building your backend.\n\nMonitor build progress at: https://huggingface.co/spaces/[your-space-name]';
+            } else {
+              status = 'Validation Failed';
+              emoji = '❌';
+              message = `Backend validation failed. Please check the [workflow logs](${jobUrl}) for details.`;
+            }
+
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: `${emoji} **Backend Deployment: ${status}**\n\nCommit: [\`${commitSha}\`](${commitUrl})\n\n${message}`
+            });

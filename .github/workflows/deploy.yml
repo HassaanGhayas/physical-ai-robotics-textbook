@@ -2,9 +2,20 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [001-book-creation]
+    paths:
+      - 'src/**'
+      - 'docs/**'
+      - 'static/**'
+      - 'docusaurus.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
   pull_request:
-    branches: [main]
+    branches: [001-book-creation]
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -26,7 +37,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/001-book-creation'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
@@ -37,3 +48,36 @@ jobs:
           # You can swap them out with your own user credentials.
           user_name: github-actions[bot]
           user_email: 41898282+github-actions[bot]@users.noreply.github.com
+
+      - name: Notify deployment success
+        if: success() && github.ref == 'refs/heads/001-book-creation'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commitSha = context.sha.substring(0, 7);
+            const commitMessage = context.payload.head_commit?.message || 'No message';
+            const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}`;
+            const siteUrl = 'https://hassaanghayas.github.io/physical-ai-robotics-textbook/';
+
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: `✅ **Frontend Deployment Successful**\n\nCommit: [\`${commitSha}\`](${commitUrl})\nMessage: ${commitMessage}\n\n🌐 Live site: ${siteUrl}\n\n⏱️ Changes should be visible within 2-3 minutes.`
+            });
+
+      - name: Notify deployment failure
+        if: failure() && github.ref == 'refs/heads/001-book-creation'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commitSha = context.sha.substring(0, 7);
+            const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}`;
+            const jobUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: `❌ **Frontend Deployment Failed**\n\nCommit: [\`${commitSha}\`](${commitUrl})\n\n🔍 Check [workflow logs](${jobUrl}) for details.`
+            });

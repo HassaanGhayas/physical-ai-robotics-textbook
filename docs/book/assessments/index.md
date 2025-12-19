@@ -1,6 +1,6 @@
 ---
 title: Assessments
-sidebar_position: 1
+sidebar_position: 9
 description: Evaluation methods for the Physical AI & Humanoid Robotics course
 ---
 

@@ -1,0 +1,301 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/HassaanGhayas/physical-ai-robotics-textbook/schemas/deployment-log.json",
+  "title": "Deployment Log",
+  "description": "Schema for deployment event logs capturing lifecycle events (started, building, deployed, failed, rolled_back)",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "log_id",
+    "deployment_id",
+    "deployment_type",
+    "event_type",
+    "timestamp",
+    "level",
+    "message"
+  ],
+  "properties": {
+    "log_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this log entry",
+      "examples": [
+        "f1e2d3c4-5678-90ab-cdef-1234567890ab"
+      ]
+    },
+    "deployment_id": {
+      "type": "string",
+      "description": "Reference to GitHubPagesDeployment or HuggingFaceSpace deployment ID",
+      "examples": [
+        "gh-pages-123456789",
+        "hf-space-987654321"
+      ]
+    },
+    "deployment_type": {
+      "type": "string",
+      "enum": [
+        "frontend",
+        "backend"
+      ],
+      "description": "Type of deployment: frontend (GitHub Pages) or backend (Hugging Face Spaces)"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "started",
+        "building",
+        "deployed",
+        "failed",
+        "rolled_back"
+      ],
+      "description": "Type of deployment event"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of the event (UTC)",
+      "examples": [
+        "2025-12-19T10:35:00Z"
+      ]
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "error"
+      ],
+      "description": "Log level: info (normal event), warning (rollback), error (failure)"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable description of the event",
+      "examples": [
+        "Frontend deployment started",
+        "Frontend build completed successfully",
+        "Frontend deployed to GitHub Pages",
+        "Backend deployment failed: missing secret COHERE_API_KEY",
+        "Rolled back to previous deployment due to health check failure"
+      ]
+    },
+    "context": {
+      "type": "object",
+      "description": "Additional metadata about the event",
+      "properties": {
+        "commit_sha": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$",
+          "description": "Git commit SHA being deployed",
+          "examples": [
+            "088573c4a5d1e3b7f9c2d4e6a8b0c1d2e3f4a5b6"
+          ]
+        },
+        "commit_message": {
+          "type": "string",
+          "description": "First line of commit message",
+          "examples": [
+            "feat: add sticky table of contents"
+          ]
+        },
+        "branch": {
+          "type": "string",
+          "description": "Git branch being deployed",
+          "examples": [
+            "001-book-creation"
+          ]
+        },
+        "deployed_by": {
+          "type": "string",
+          "description": "User or bot who triggered the deployment",
+          "examples": [
+            "github-actions[bot]",
+            "HassaanGhayas"
+          ]
+        },
+        "build_duration_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time taken to build in seconds (for 'deployed' or 'failed' events)",
+          "examples": [
+            180,
+            420
+          ]
+        },
+        "deployment_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Public URL where the deployment is accessible",
+          "examples": [
+            "https://hassaanghayas.github.io/physical-ai-robotics-textbook",
+            "https://hassaanghayas-physical-ai-robotics-backend.hf.space"
+          ]
+        },
+        "error_code": {
+          "type": "string",
+          "description": "Error code or exception type (for 'failed' events)",
+          "examples": [
+            "BUILD_FAILURE",
+            "MISSING_SECRET",
+            "HEALTH_CHECK_FAILED",
+            "TIMEOUT"
+          ]
+        },
+        "error_details": {
+          "type": "string",
+          "description": "Detailed error message or stack trace (for 'failed' events)",
+          "examples": [
+            "npm run build exited with code 1: Module not found",
+            "Hugging Face Space failed health check: 503 Service Unavailable"
+          ]
+        },
+        "rollback_to_commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$",
+          "description": "Commit SHA rolled back to (for 'rolled_back' events)",
+          "examples": [
+            "36dd4a64a5d1e3b7f9c2d4e6a8b0c1d2e3f4a5b6"
+          ]
+        },
+        "workflow_run_id": {
+          "type": "string",
+          "description": "GitHub Actions run ID associated with this event",
+          "examples": [
+            "7654321098"
+          ]
+        },
+        "workflow_run_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to GitHub Actions run logs",
+          "examples": [
+            "https://github.com/HassaanGhayas/physical-ai-robotics-textbook/actions/runs/7654321098"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "repository": {
+      "type": "object",
+      "description": "Repository metadata (optional)",
+      "properties": {
+        "owner": {
+          "type": "string",
+          "examples": [
+            "HassaanGhayas"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "examples": [
+            "physical-ai-robotics-textbook"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://github.com/HassaanGhayas/physical-ai-robotics-textbook"
+          ]
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "log_id": "f1e2d3c4-5678-90ab-cdef-1234567890ab",
+      "deployment_id": "gh-pages-123456789",
+      "deployment_type": "frontend",
+      "event_type": "deployed",
+      "timestamp": "2025-12-19T10:35:00Z",
+      "level": "info",
+      "message": "Frontend deployed successfully to GitHub Pages",
+      "context": {
+        "commit_sha": "088573c4a5d1e3b7f9c2d4e6a8b0c1d2e3f4a5b6",
+        "commit_message": "feat: add sticky table of contents",
+        "branch": "001-book-creation",
+        "deployed_by": "github-actions[bot]",
+        "build_duration_seconds": 180,
+        "deployment_url": "https://hassaanghayas.github.io/physical-ai-robotics-textbook",
+        "workflow_run_id": "7654321098",
+        "workflow_run_url": "https://github.com/HassaanGhayas/physical-ai-robotics-textbook/actions/runs/7654321098"
+      },
+      "repository": {
+        "owner": "HassaanGhayas",
+        "name": "physical-ai-robotics-textbook",
+        "url": "https://github.com/HassaanGhayas/physical-ai-robotics-textbook"
+      }
+    },
+    {
+      "log_id": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+      "deployment_id": "hf-space-987654321",
+      "deployment_type": "backend",
+      "event_type": "failed",
+      "timestamp": "2025-12-19T10:42:00Z",
+      "level": "error",
+      "message": "Backend deployment failed: missing required secret COHERE_API_KEY",
+      "context": {
+        "commit_sha": "088573c4a5d1e3b7f9c2d4e6a8b0c1d2e3f4a5b6",
+        "commit_message": "feat: update backend RAG agent",
+        "branch": "001-book-creation",
+        "deployed_by": "github-actions[bot]",
+        "build_duration_seconds": 120,
+        "error_code": "MISSING_SECRET",
+        "error_details": "ValidationError: field required (type=value_error.missing)\nCOHERE_API_KEY environment variable not set",
+        "workflow_run_id": "7654321099",
+        "workflow_run_url": "https://github.com/HassaanGhayas/physical-ai-robotics-textbook/actions/runs/7654321099"
+      },
+      "repository": {
+        "owner": "HassaanGhayas",
+        "name": "physical-ai-robotics-textbook",
+        "url": "https://github.com/HassaanGhayas/physical-ai-robotics-textbook"
+      }
+    },
+    {
+      "log_id": "b2c3d4e5-5678-90ab-cdef-1234567890ab",
+      "deployment_id": "gh-pages-123456790",
+      "deployment_type": "frontend",
+      "event_type": "rolled_back",
+      "timestamp": "2025-12-19T11:05:00Z",
+      "level": "warning",
+      "message": "Rolled back frontend deployment due to broken links",
+      "context": {
+        "commit_sha": "088573c4a5d1e3b7f9c2d4e6a8b0c1d2e3f4a5b6",
+        "commit_message": "feat: add new documentation page",
+        "branch": "001-book-creation",
+        "deployed_by": "HassaanGhayas",
+        "rollback_to_commit": "36dd4a64a5d1e3b7f9c2d4e6a8b0c1d2e3f4a5b6",
+        "deployment_url": "https://hassaanghayas.github.io/physical-ai-robotics-textbook",
+        "workflow_run_id": "7654321100",
+        "workflow_run_url": "https://github.com/HassaanGhayas/physical-ai-robotics-textbook/actions/runs/7654321100"
+      },
+      "repository": {
+        "owner": "HassaanGhayas",
+        "name": "physical-ai-robotics-textbook",
+        "url": "https://github.com/HassaanGhayas/physical-ai-robotics-textbook"
+      }
+    },
+    {
+      "log_id": "c3d4e5f6-5678-90ab-cdef-1234567890ab",
+      "deployment_id": "hf-space-987654322",
+      "deployment_type": "backend",
+      "event_type": "building",
+      "timestamp": "2025-12-19T10:38:00Z",
+      "level": "info",
+      "message": "Backend Docker image building on Hugging Face Spaces",
+      "context": {
+        "commit_sha": "088573c4a5d1e3b7f9c2d4e6a8b0c1d2e3f4a5b6",
+        "commit_message": "feat: optimize backend performance",
+        "branch": "001-book-creation",
+        "deployed_by": "github-actions[bot]",
+        "workflow_run_id": "7654321101",
+        "workflow_run_url": "https://github.com/HassaanGhayas/physical-ai-robotics-textbook/actions/runs/7654321101"
+      },
+      "repository": {
+        "owner": "HassaanGhayas",
+        "name": "physical-ai-robotics-textbook",
+        "url": "https://github.com/HassaanGhayas/physical-ai-robotics-textbook"
+      }
+    }
+  ]
+}

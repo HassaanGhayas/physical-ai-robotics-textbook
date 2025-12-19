@@ -1,0 +1,295 @@
+openapi: 3.0.1
+info:
+  title: Qdrant Retrieval Testing API
+  description: API for testing and validating Qdrant retrieval functionality with RAG systems
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+paths:
+  /test-retrieval:
+    post:
+      summary: Run comprehensive retrieval validation tests
+      description: Validates the complete retrieval pipeline by ingesting a known corpus and testing retrieval accuracy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestRetrievalRequest'
+      responses:
+        '200':
+          description: Retrieval test completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestRetrievalResponse'
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error during retrieval testing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /retrieve:
+    post:
+      summary: Retrieve relevant chunks from Qdrant
+      description: Performs vector search in Qdrant and returns relevant text chunks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveRequest'
+      responses:
+        '200':
+          description: Successfully retrieved relevant chunks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveResponse'
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error during retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ingest-corpus:
+    post:
+      summary: Ingest a corpus of documents into Qdrant
+      description: Processes and stores documents from specified URLs into Qdrant for retrieval testing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestCorpusRequest'
+      responses:
+        '200':
+          description: Corpus ingestion completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestCorpusResponse'
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error during corpus ingestion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    TestRetrievalRequest:
+      type: object
+      required:
+        - corpus_urls
+        - test_queries
+      properties:
+        corpus_urls:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: URLs of documents to use as test corpus
+          example: ["https://hassaanghayas.github.io/physical-ai-robotics-textbook/"]
+        test_queries:
+          type: array
+          items:
+            type: string
+          description: Queries to test retrieval accuracy
+          example: ["What is physical AI?", "Explain humanoid robotics"]
+        top_k:
+          type: integer
+          default: 5
+          minimum: 1
+          maximum: 100
+          description: Number of results to retrieve for each query
+        collection_name:
+          type: string
+          default: "rag_embedding"
+          description: Name of the Qdrant collection to use
+
+    TestRetrievalResponse:
+      type: object
+      properties:
+        setup_completed:
+          type: boolean
+          description: Whether the test setup was completed
+        expected_chunks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TextChunk'
+          description: Expected chunks for validation
+        test_results:
+          type: object
+          properties:
+            top_k_accuracy:
+              type: number
+              format: float
+              minimum: 0.0
+              maximum: 1.0
+              description: Accuracy of top-k result counts
+            chunk_integrity:
+              type: number
+              format: float
+              minimum: 0.0
+              maximum: 1.0
+              description: Percentage of chunks matching original content
+            metadata_correctness:
+              type: number
+              format: float
+              minimum: 0.0
+              maximum: 1.0
+              description: Percentage of metadata fields correct
+            response_time_ms:
+              type: number
+              format: float
+              description: Average response time in milliseconds
+
+    RetrieveRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: Text query for vector search
+          example: "What is physical AI?"
+        top_k:
+          type: integer
+          default: 5
+          minimum: 1
+          maximum: 100
+          description: Number of results to return
+        filters:
+          type: object
+          description: Optional filters for the search
+          additionalProperties: true
+
+    RetrieveResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RetrievalResult'
+        query_time_ms:
+          type: number
+          format: float
+          description: Time taken for the query in milliseconds
+
+    IngestCorpusRequest:
+      type: object
+      required:
+        - urls
+      properties:
+        urls:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: URLs of documents to ingest
+        collection_name:
+          type: string
+          default: "rag_embedding"
+          description: Name of the Qdrant collection to use
+
+    IngestCorpusResponse:
+      type: object
+      properties:
+        ingestion_summary:
+          type: object
+          properties:
+            total_documents:
+              type: integer
+              description: Number of documents processed
+            successful_ingestions:
+              type: integer
+              description: Number of documents successfully ingested
+            failed_ingestions:
+              type: integer
+              description: Number of documents that failed to ingest
+            chunks_created:
+              type: integer
+              description: Number of text chunks created
+            collection_name:
+              type: string
+              description: Name of the collection used
+
+    TextChunk:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the chunk
+        document_id:
+          type: string
+          description: ID of the parent document
+        content:
+          type: string
+          description: The text content of the chunk
+        metadata:
+          type: object
+          description: Additional metadata about the chunk
+          additionalProperties: true
+
+    RetrievalResult:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Qdrant point ID
+        content:
+          type: string
+          description: The retrieved text content
+        url:
+          type: string
+          description: Source URL of the content
+        chunk_id:
+          type: string
+          description: ID of the chunk in the original document
+        document_id:
+          type: string
+          description: ID of the original document
+        similarity_score:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+          description: Cosine similarity to query
+        position:
+          type: integer
+          description: Rank position in results (starting from 1)
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Invalid query parameters"
+        details:
+          type: string
+          description: Additional error details
+          example: "Query text cannot be empty"

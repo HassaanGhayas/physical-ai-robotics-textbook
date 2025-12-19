@@ -3,40 +3,25 @@
  * Technical documentation theme optimized for robotics and AI content
  */
 
-/* You can override the default Infima variables here. */
+/* Import Inter Variable Font */
+@import '@fontsource-variable/inter';
+
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Design System Styles */
+@import './theme-colors.css';
+@import './patterns.css';
+@import './typography.css';
+@import './spacing.css';
+@import './accessibility.css';
+
+/* Additional configuration */
 :root {
-  --ifm-color-primary: #2563eb; /* Indigo blue for tech theme */
-  --ifm-color-primary-dark: #1d4ed8;
-  --ifm-color-primary-darker: #1e40af;
-  --ifm-color-primary-darkest: #1e3a8a;
-  --ifm-color-primary-light: #3b82f6;
-  --ifm-color-primary-lighter: #60a5fa;
-  --ifm-color-primary-lightest: #93c5fd;
   --ifm-code-font-size: 90%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-  --prism-background-color: #f6f8fa;
-  --prism-color: #24292f;
-
-  /* Additional colors for technical content */
-  --ifm-color-hardware: #dc2626; /* Red for hardware components */
-  --ifm-color-software: #059669; /* Green for software/code */
-  --ifm-color-ai: #7c3aed; /* Purple for AI content */
-  --ifm-color-robotics: #ea580c; /* Orange for robotics */
-
-  /* Enhanced typography for technical content */
-  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
-  --ifm-line-height-base: 1.7;
-
-  /* Custom variables for Physical AI & Humanoid Robotics book */
-  --book-primary: #4a6cf7;
-  --book-primary-dark: #3a5ae8;
-  --book-primary-light: #5a7dff;
-  --book-accent: #ff6b6b;
-  --book-accent-dark: #e55a5a;
-  --book-accent-light: #ff7c7c;
-  --book-neutral: #6c757d;
-  --book-neutral-light: #f8f9fa;
-  --book-neutral-dark: #343a40;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -372,4 +357,1283 @@ code {
     text-align: center;
     margin: 0.5rem 0;
   }
+}
+
+/* ============================================================================
+   Navbar Fixes - Complete Overhaul
+   ============================================================================ */
+
+/* Main navbar container */
+.navbar {
+  background-color: var(--bg-primary) !important;
+  border-bottom: 1px solid var(--border-default) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  height: 60px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
+  padding: 0 !important;
+}
+
+/* Container inside navbar */
+.navbar > .navbar__inner {
+  height: 60px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  padding: 0 16px !important;
+  max-width: none !important;
+}
+
+/* Left side items container */
+.navbar__items--left {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 20px !important;
+  height: 60px !important;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+}
+
+/* Right side items container */
+.navbar__items--right {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  height: 60px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Brand container (logo + title) */
+.navbar__brand {
+  height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  margin-right: 0 !important;
+  padding: 0 !important;
+}
+
+/* Logo image */
+.navbar__logo {
+  height: 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  margin-right: 10px !important;
+  flex-shrink: 0 !important;
+}
+
+.navbar__logo img,
+.navbar__logo svg {
+  height: 28px !important;
+  width: 28px !important;
+  max-height: 28px !important;
+  max-width: 28px !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+/* Site title */
+.navbar__title {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  line-height: 60px !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 60px !important;
+}
+
+/* Navigation links */
+.navbar__item {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 60px !important;
+}
+
+.navbar__link {
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+  font-size: 15px !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  transition: all 150ms ease !important;
+  display: flex !important;
+  align-items: center !important;
+  height: auto !important;
+  line-height: 1.5 !important;
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-secondary) !important;
+  text-decoration: none !important;
+}
+
+/* Theme toggle button - Fixed to prevent squeezing */
+/* Shows sun icon (☀️) in light mode, moon icon (🌙) in dark mode */
+.navbar__items button[class*="toggle"],
+.navbar__items button[class*="colorModeToggle"] {
+  color: var(--text-primary) !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 6px !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  transition: background-color 150ms ease !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+.navbar__items button[class*="toggle"]:hover,
+.navbar__items button[class*="colorModeToggle"]:hover {
+  background-color: var(--bg-secondary) !important;
+}
+
+/* Ensure SVG icons are properly displayed */
+.navbar__items button[class*="toggle"] svg,
+.navbar__items button[class*="colorModeToggle"] svg {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Theme toggle icons - based on user choice, not current theme */
+/* Note: Uses data-theme-choice attribute which reflects user's setting (light/dark/system) */
+/* This ensures correct icon is shown even when theme is set to "system" */
+
+/* Light mode choice: Show sun icon */
+[data-theme-choice='light'] button[class*="toggle"] svg[class*="lightToggleIcon"],
+[data-theme-choice='light'] button[class*="colorModeToggle"] svg[class*="lightToggleIcon"] {
+  display: block !important;
+}
+
+[data-theme-choice='light'] button[class*="toggle"] svg[class*="darkToggleIcon"],
+[data-theme-choice='light'] button[class*="toggle"] svg[class*="systemToggleIcon"],
+[data-theme-choice='light'] button[class*="colorModeToggle"] svg[class*="darkToggleIcon"],
+[data-theme-choice='light'] button[class*="colorModeToggle"] svg[class*="systemToggleIcon"] {
+  display: none !important;
+}
+
+/* Dark mode choice: Show moon icon */
+[data-theme-choice='dark'] button[class*="toggle"] svg[class*="darkToggleIcon"],
+[data-theme-choice='dark'] button[class*="colorModeToggle"] svg[class*="darkToggleIcon"] {
+  display: block !important;
+}
+
+[data-theme-choice='dark'] button[class*="toggle"] svg[class*="lightToggleIcon"],
+[data-theme-choice='dark'] button[class*="toggle"] svg[class*="systemToggleIcon"],
+[data-theme-choice='dark'] button[class*="colorModeToggle"] svg[class*="lightToggleIcon"],
+[data-theme-choice='dark'] button[class*="colorModeToggle"] svg[class*="systemToggleIcon"] {
+  display: none !important;
+}
+
+/* System mode choice: Show system icon (computer/auto icon) */
+[data-theme-choice='system'] button[class*="toggle"] svg[class*="systemToggleIcon"],
+[data-theme-choice='system'] button[class*="colorModeToggle"] svg[class*="systemToggleIcon"] {
+  display: block !important;
+}
+
+[data-theme-choice='system'] button[class*="toggle"] svg[class*="lightToggleIcon"],
+[data-theme-choice='system'] button[class*="toggle"] svg[class*="darkToggleIcon"],
+[data-theme-choice='system'] button[class*="colorModeToggle"] svg[class*="lightToggleIcon"],
+[data-theme-choice='system'] button[class*="colorModeToggle"] svg[class*="darkToggleIcon"] {
+  display: none !important;
+}
+
+/* GitHub and external links */
+.navbar__item--icon-only {
+  width: 36px !important;
+  height: 36px !important;
+  padding: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Mobile hamburger menu toggle - Only visible on mobile devices */
+/* IMPORTANT: This only targets the hamburger menu, NOT the theme toggle */
+
+/* Hide hamburger menu on desktop (>996px) */
+@media (min-width: 997px) {
+  /* Target the exact hamburger button: aria-label="Toggle navigation bar" */
+  button[aria-label="Toggle navigation bar"],
+  button.navbar__toggle.clean-btn,
+  .navbar__toggle.clean-btn,
+  .navbar__toggle,
+  button.navbar__toggle,
+  .navbar-sidebar__toggle,
+  .navbar-sidebar__brand {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Show hamburger menu on mobile (<=996px) */
+@media (max-width: 996px) {
+  button[aria-label="Toggle navigation bar"],
+  .navbar__toggle.clean-btn,
+  button.navbar__toggle {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 6px !important;
+    flex-shrink: 0 !important;
+    pointer-events: auto !important;
+  }
+
+  /* Hide navbar navigation links on mobile - they appear in sidebar instead */
+  /* Keep: Logo, Title, Theme Toggle */
+  /* Hide: Book link, Blog link, GitHub link */
+  .navbar__items--left .navbar__item,
+  .navbar__items--left .navbar__link {
+    display: none !important;
+  }
+
+  .navbar__items--right .navbar__item:not([class*="colorMode"]):not([class*="toggle"]),
+  .navbar__items--right .navbar__link:not([class*="colorMode"]) {
+    display: none !important;
+  }
+
+  /* Keep brand (logo + title) visible on mobile */
+  .navbar__brand {
+    display: flex !important;
+  }
+
+  .navbar__title {
+    display: flex !important;
+  }
+
+  .navbar__logo {
+    display: block !important;
+  }
+
+  /* Keep theme toggle visible on mobile */
+  .navbar__items--right button[class*="colorMode"],
+  .navbar__items--right button[class*="toggle_"],
+  .navbar__items button[class*="colorModeToggle"] {
+    display: flex !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 996px) {
+  .navbar__title {
+    font-size: 15px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar__title {
+    font-size: 14px !important;
+    max-width: 180px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .navbar__items--left {
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar__title {
+    display: none !important;
+  }
+
+  .navbar__logo {
+    margin-right: 0 !important;
+  }
+
+  .navbar > .navbar__inner {
+    padding: 0 12px !important;
+  }
+}
+
+/* Dark mode adjustments */
+[data-theme='dark'] .navbar {
+  background-color: var(--bg-primary) !important;
+  border-bottom-color: var(--border-default) !important;
+}
+
+/* ============================================================================
+   External Link Icons - Hide them
+   ============================================================================ */
+
+/* Hide external link icons in navbar */
+.navbar__link::after,
+.navbar__item a[href^="http"]::after,
+.navbar__item a[href^="https://"]::after,
+a[href^="http"] .icon-external-link,
+a[href^="https://"] .icon-external-link {
+  display: none !important;
+  content: none !important;
+}
+
+/* Hide external link icons globally */
+a[target="_blank"]::after,
+a[rel~="noopener"]::after,
+a[class*="external"]::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Hide any SVG icons for external links */
+.icon-external-link,
+[class*="iconExternalLink"],
+svg[class*="iconExternalLink"] {
+  display: none !important;
+}
+
+/* ============================================================================
+   Remove default hero banner styling
+   ============================================================================ */
+
+.hero {
+  background-color: transparent;
+  padding: 0;
+}
+
+.hero--primary {
+  background-color: transparent;
+}
+
+.hero__title,
+.hero__subtitle {
+  color: inherit;
+}
+
+/* ============================================================================
+   Button consistency
+   ============================================================================ */
+
+.button {
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 200ms ease-out;
+}
+
+.button--primary {
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  border: none;
+}
+
+.button--primary:hover {
+  background-color: var(--text-secondary);
+  color: var(--bg-primary);
+}
+
+.button--secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+}
+
+.button--secondary:hover {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-strong);
+}
+
+/* ============================================================================
+   Main content adjustments
+   ============================================================================ */
+
+main.docMainContainer {
+  padding-top: 0;
+}
+
+.main-wrapper {
+  padding-top: 0;
+}
+
+/* ============================================================================
+   Container and spacing consistency
+   ============================================================================ */
+
+.container-max-width {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 768px) {
+  .container-max-width {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container-max-width {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* Remove extra padding from main container on homepage */
+.homepage main {
+  padding: 0;
+}
+
+/* ============================================================================
+   Link styling consistency
+   ============================================================================ */
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--text-secondary);
+  text-decoration: underline;
+}
+
+/* Card links */
+.card a {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.card a:hover {
+  color: var(--text-secondary);
+}
+
+/* ============================================================================
+   Remove default feature styling
+   ============================================================================ */
+
+.text--center {
+  text-align: center;
+}
+
+/* ============================================================================
+   Footer styling
+   ============================================================================ */
+
+.footer {
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-default);
+}
+
+.footer__link-item {
+  color: var(--text-secondary) !important;
+}
+
+.footer__link-item:hover {
+  color: var(--text-primary) !important;
+}
+
+.footer__title {
+  color: var(--text-primary) !important;
+}
+
+.footer__copyright {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme='dark'] .footer {
+  background-color: var(--bg-primary);
+}
+
+/* ============================================================================
+   Mobile Sidebar Styling - Redesigned
+   ============================================================================ */
+
+/* Mobile sidebar container */
+.navbar-sidebar {
+  background-color: var(--bg-primary) !important;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1) !important;
+  max-width: 85vw !important;
+  width: 300px !important;
+  height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  transition: transform 250ms ease-out !important;
+}
+
+[data-theme='dark'] .navbar-sidebar {
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Sidebar header with brand */
+.navbar-sidebar__brand {
+  padding: 20px 16px !important;
+  border-bottom: 1px solid var(--border-default) !important;
+  background-color: var(--bg-secondary) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  min-height: 60px !important;
+  gap: 12px !important;
+}
+
+/* Sidebar brand link - logo container */
+.navbar-sidebar__brand > a,
+.navbar-sidebar__brand .navbar__brand {
+  display: flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
+}
+
+/* Sidebar logo */
+.navbar-sidebar__brand .navbar__logo,
+.navbar-sidebar__brand img {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Hide title in mobile sidebar - show only logo */
+.navbar-sidebar__brand .navbar__title {
+  display: none !important;
+}
+
+/* Sidebar close button - modern design */
+.navbar-sidebar__close {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--text-primary) !important;
+  background: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  transition: all 200ms ease !important;
+  margin-left: auto !important;
+}
+
+.navbar-sidebar__close:hover {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-strong) !important;
+  transform: scale(1.05) !important;
+}
+
+.navbar-sidebar__close:active {
+  transform: scale(0.95) !important;
+}
+
+.navbar-sidebar__close svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* Sidebar content area - full width */
+.navbar-sidebar__items,
+.navbar-sidebar__items--show-secondary {
+  padding: 20px 16px !important;
+  background-color: var(--bg-primary) !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Sidebar menu items styling */
+.navbar-sidebar .menu {
+  padding: 0 !important;
+}
+
+.navbar-sidebar .menu__link {
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  margin-bottom: 4px !important;
+  transition: all 150ms ease !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.navbar-sidebar .menu__link:hover {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.navbar-sidebar .menu__link--active {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  border-left: 3px solid var(--text-primary) !important;
+  padding-left: 13px !important;
+}
+
+/* Sidebar category headers */
+.navbar-sidebar .menu__list-item-collapsible {
+  margin-bottom: 8px !important;
+}
+
+.navbar-sidebar .menu__list-item-collapsible > .menu__link {
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  padding: 12px 16px !important;
+}
+
+/* Nested menu items in mobile sidebar */
+.navbar-sidebar .menu__list .menu__list {
+  padding-left: 0 !important;
+  margin-top: 4px !important;
+  margin-left: 12px !important;
+  border-left: 2px solid var(--border-default) !important;
+  padding-left: 12px !important;
+}
+
+.navbar-sidebar .menu__list .menu__list .menu__link {
+  padding: 10px 12px !important;
+  font-size: 14px !important;
+}
+
+/* Sidebar backdrop - darker overlay */
+.navbar-sidebar__backdrop {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(2px) !important;
+}
+
+[data-theme='dark'] .navbar-sidebar__backdrop {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Scrollbar styling for mobile sidebar */
+.navbar-sidebar::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.navbar-sidebar::-webkit-scrollbar-track {
+  background: var(--bg-secondary) !important;
+}
+
+.navbar-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-strong) !important;
+  border-radius: 3px !important;
+}
+
+.navbar-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary) !important;
+}
+
+/* ============================================================================
+   Mobile Responsiveness Fixes
+   ============================================================================ */
+
+/* Base responsive text sizing */
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Container responsive padding - CONSISTENT ON BOTH SIDES */
+.container,
+.container-fluid {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+@media (max-width: 768px) {
+  .container,
+  .container-fluid {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+/* Homepage header responsive */
+header.py-16 {
+  padding-top: 48px !important;
+  padding-bottom: 48px !important;
+}
+
+@media (max-width: 768px) {
+  header.py-16 {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  header.py-16 {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+  }
+}
+
+/* Homepage sections responsive */
+section.py-16 {
+  padding-top: 48px !important;
+  padding-bottom: 48px !important;
+}
+
+@media (max-width: 768px) {
+  section.py-16 {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  section.py-16 {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+  }
+}
+
+/* Heading responsive sizing */
+.text-5xl,
+.text-6xl {
+  font-size: 2.5rem !important;
+  line-height: 1.2 !important;
+}
+
+@media (max-width: 768px) {
+  .text-5xl,
+  .text-6xl {
+    font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-5xl,
+  .text-6xl {
+    font-size: 1.75rem !important;
+  }
+}
+
+.text-3xl,
+.text-4xl {
+  font-size: 2rem !important;
+  line-height: 1.25 !important;
+}
+
+@media (max-width: 768px) {
+  .text-3xl,
+  .text-4xl {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-3xl,
+  .text-4xl {
+    font-size: 1.25rem !important;
+  }
+}
+
+.text-xl,
+.text-2xl {
+  font-size: 1.25rem !important;
+  line-height: 1.5 !important;
+}
+
+@media (max-width: 768px) {
+  .text-xl,
+  .text-2xl {
+    font-size: 1.125rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-xl,
+  .text-2xl {
+    font-size: 1rem !important;
+  }
+}
+
+/* Button responsive sizing */
+.button--lg {
+  padding: 12px 24px !important;
+  font-size: 1rem !important;
+}
+
+@media (max-width: 768px) {
+  .button--lg {
+    padding: 10px 20px !important;
+    font-size: 0.95rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .button--lg {
+    padding: 8px 16px !important;
+    font-size: 0.9rem !important;
+    width: 100% !important;
+    display: block !important;
+  }
+
+  /* Stack buttons vertically on mobile */
+  .flex.gap-4 {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+}
+
+/* Max width containers */
+.max-w-3xl,
+.max-w-2xl {
+  max-width: 100% !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+/* Card component mobile adjustments */
+@media (max-width: 768px) {
+  .h-full {
+    min-height: auto !important;
+  }
+}
+
+/* Margin bottom responsive */
+.mb-12 {
+  margin-bottom: 48px !important;
+}
+
+@media (max-width: 768px) {
+  .mb-12 {
+    margin-bottom: 32px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .mb-12 {
+    margin-bottom: 24px !important;
+  }
+}
+
+.mb-6,
+.mb-8 {
+  margin-bottom: 24px !important;
+}
+
+@media (max-width: 768px) {
+  .mb-6,
+  .mb-8 {
+    margin-bottom: 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .mb-6,
+  .mb-8 {
+    margin-bottom: 16px !important;
+  }
+}
+
+/* Prevent horizontal overflow */
+body,
+html {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
+
+main {
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+}
+
+/* Fix any elements that might cause overflow */
+* {
+  box-sizing: border-box;
+}
+
+*:not(svg):not(path):not(g):not(circle):not(rect):not(line):not(polyline):not(polygon) {
+  max-width: 100%;
+}
+
+img,
+video,
+iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Ensure flex containers don't overflow */
+.flex {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* Grid containers */
+.grid,
+[class*="Grid"] {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* Text containers */
+.text-center,
+.text-left,
+.text-right {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  hyphens: auto !important;
+}
+
+/* Ensure headings don't overflow */
+h1, h2, h3, h4, h5, h6 {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+/* Ensure paragraphs don't overflow */
+p {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+/* Ensure all text elements respect viewport boundaries */
+div, span, section, article, aside, nav, header, footer, main {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+}
+
+/* Fix code blocks */
+pre,
+code {
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  word-break: break-all !important;
+}
+
+/* Docusaurus specific containers */
+.docMainContainer,
+.docItemContainer {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* Article and content - REMOVE PADDING (applied at container level) */
+article {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Docusaurus main container - no padding */
+.main-wrapper {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.docMainContainer {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Documentation page wrapper - no padding */
+.docPage {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Documentation item column - SINGLE LAYER OF PADDING (increased for spaciousness) */
+[class*="docItemCol"] {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+@media (max-width: 768px) {
+  [class*="docItemCol"] {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+/* ============================================================================
+   Documentation Content Text Wrapping
+   ============================================================================ */
+
+/* Ensure all markdown content respects viewport boundaries */
+.markdown,
+.markdown > *,
+[class*="docItem"],
+[class*="docPage"] {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* Markdown wrapper - consistent spacing on both sides */
+.markdown {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Fix for long text in documentation content */
+.markdown p,
+.markdown div,
+.markdown span,
+.markdown li,
+.markdown td,
+.markdown th {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+/* Fix table of contents "On this page" section */
+.table-of-contents,
+[class*="tableOfContents"],
+[class*="tocCollapsible"] {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.table-of-contents *,
+[class*="tableOfContents"] *,
+[class*="tocCollapsible"] * {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+/* Breadcrumbs - Fix home icon alignment */
+.breadcrumbs,
+[class*="breadcrumbs"] {
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+/* Breadcrumb items alignment */
+.breadcrumbs__item,
+[class*="breadcrumbs"] > * {
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 1 !important;
+}
+
+/* Home icon in breadcrumbs */
+.breadcrumbs__link svg,
+[class*="breadcrumbs"] a svg,
+[class*="breadcrumbs"] svg {
+  vertical-align: middle !important;
+  display: inline-block !important;
+  margin-right: 4px !important;
+}
+
+/* Breadcrumb separator alignment */
+.breadcrumbs__separator,
+[class*="breadcrumbsItem"] + [class*="breadcrumbsItem"]::before {
+  display: inline-flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+}
+
+/* Documentation page header */
+.docusaurus-mt-lg {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* Title and heading in doc pages */
+[class*="docTitle"],
+[class*="docItemCol"] {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+[class*="docTitle"] *,
+[class*="docItemCol"] * {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+/* ============================================================================
+   Simplified Spacing - Remove Nested Padding Layers
+   ============================================================================ */
+
+/* Reset padding on all theme containers */
+.theme-doc-markdown,
+[class*="theme-doc"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Documentation content wrapper - no padding */
+[class*="docItemWrapper"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Main documentation container - no padding */
+div[class*="docRoot"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ensure box-sizing for all doc containers */
+div[class*="doc"] {
+  box-sizing: border-box !important;
+}
+
+/* Article wrapper - no padding (padding applied at docItemCol level) */
+article[class*="doc"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* ============================================================================
+   Sidebar Link Alignment Fix
+   ============================================================================ */
+
+/* Sidebar menu items - vertical alignment */
+.menu__link,
+.menu__list-item-collapsible,
+[class*="menuLink"],
+[class*="menu"] a {
+  display: flex !important;
+  align-items: center !important;
+  line-height: 1.5 !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  min-height: 36px !important;
+}
+
+/* Sidebar category links with chevron icons */
+.menu__list-item-collapsible > .menu__link,
+[class*="menuListItemCollapsible"] > [class*="menuLink"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+/* Sidebar chevron/arrow icons alignment */
+.menu__link svg,
+.menu__caret,
+[class*="menuLink"] svg,
+[class*="menuCaret"] {
+  vertical-align: middle !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* Sidebar list items */
+.menu__list-item,
+[class*="menuListItem"] {
+  display: block !important;
+}
+
+/* Active/selected sidebar link */
+.menu__link--active,
+[class*="menuLink"][class*="active"] {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Sidebar nested items indentation with proper alignment */
+.menu__list .menu__list {
+  padding-left: 12px !important;
+}
+
+.menu__list .menu__list .menu__link,
+[class*="menuList"] [class*="menuList"] [class*="menuLink"] {
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 12px !important;
+}
+
+/* Remove default margin/padding that causes misalignment */
+.menu__list-item {
+  margin: 0 !important;
+}
+
+.menu__link {
+  margin: 0 !important;
+}
+
+/* Sidebar container alignment */
+.menu,
+[class*="menu"][class*="thin"] {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Fix for sidebar category collapse button */
+button.menu__link {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  text-align: left !important;
 }
