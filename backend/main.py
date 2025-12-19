@@ -2,6 +2,8 @@
 Embedding Pipeline for Docusaurus URL crawling, Cohere embeddings, and Qdrant storage.
 This is a single-file implementation that follows the task breakdown from tasks.md.
 """
+from __future__ import annotations
+
 import os
 import logging
 from typing import List, Dict, Any, Optional
