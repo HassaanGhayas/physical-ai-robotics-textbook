@@ -211,6 +211,13 @@ The API is configured to accept requests from:
 - Monitor /health endpoint for service status
 - Track response times in API metadata
 
+## Security
+
+- All API keys are stored as environment variables (never in code)
+- CORS is configured to only allow requests from trusted domains
+- Input validation prevents malicious queries
+- Rate limiting and circuit breakers prevent abuse
+
 ## Related Features
 
 - **001-qdrant-retrieval-testing**: Provides the underlying Qdrant retrieval functionality
